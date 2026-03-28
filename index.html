@@ -76,25 +76,12 @@
             font-size: 20px; font-weight: bold; color: var(--neon-cyan); background: var(--letter-bg); padding: 8px 16px; border-radius: 12px; border: 1px solid var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan-dim);
         }
 
-        /* --- NEW: BASE WORD HUD --- */
         .base-word-area {
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 12px;
-            padding: 10px 20px;
-            margin: 15px auto;
-            display: inline-block;
-            box-shadow: 0 0 15px var(--neon-cyan-dim);
+            background: rgba(0, 243, 255, 0.05); border: 1px solid var(--neon-cyan); border-radius: 12px; padding: 10px 20px; margin: 15px auto; display: inline-block; box-shadow: 0 0 15px var(--neon-cyan-dim);
         }
-        .base-word-label {
-            color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;
-        }
-        .base-word-text {
-            font-size: 36px; font-weight: bold; color: var(--warning-yellow); letter-spacing: 8px; text-shadow: 0 0 15px rgba(255, 234, 0, 0.5);
-        }
-        .phase-instruction {
-            color: var(--success-green); font-size: 20px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
-        }
+        .base-word-label { color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+        .base-word-text { font-size: 36px; font-weight: bold; color: var(--warning-yellow); letter-spacing: 8px; text-shadow: 0 0 15px rgba(255, 234, 0, 0.5); }
+        .phase-instruction { color: var(--success-green); font-size: 20px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
 
         .image-clue { font-size: 110px; margin: 15px 0; text-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: popIn 0.5s ease; }
 
@@ -134,11 +121,33 @@
         .check-btn:active { transform: scale(0.95); }
         .check-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; box-shadow: none; background: transparent; }
 
+        /* --- NEW: THE FLASHY NEXT WORD BUTTON --- */
+        .flashy-next-btn {
+            background-color: var(--warning-yellow);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 22px;
+            font-weight: 900;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(255, 234, 0, 0.6);
+            animation: pulse-flashy 0.8s infinite alternate;
+            margin-top: 10px;
+            display: none; /* Hidden until strike 3 */
+        }
+        @keyframes pulse-flashy {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 234, 0, 0.5); }
+            100% { transform: scale(1.05); box-shadow: 0 0 30px var(--warning-yellow), 0 0 40px #fff; }
+        }
+
         .feedback { font-size: 22px; font-weight: bold; height: 30px; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
         .correct { color: var(--success-green); text-shadow: 0 0 10px var(--success-green); }
         .wrong { color: var(--error-red); text-shadow: 0 0 10px var(--error-red); }
 
-        .back-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; margin-top: 20px; transition: color 0.2s; }
+        .back-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; margin-top: 20px; transition: color 0.2s; display: block; width: 100%; }
         .back-btn:hover { color: #fff; text-shadow: 0 0 5px #fff; }
 
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
@@ -193,13 +202,15 @@
                 </div>
 
             <div class="tools-area">
-                <button id="listenBtn" class="tool-btn listen-btn" onclick="speakWord()">🔒 AUDIO LOCKED</button>
+                <button id="listenBtn" class="tool-btn listen-btn" onclick="speakWord()">🔊 LISTEN</button>
                 <button id="showTurkBtn" class="tool-btn turkish-btn" onclick="revealTurkish()">🇹🇷 SEE TURKISH</button>
                 <div id="turkTranslation" class="turkish-translation"></div>
             </div>
 
             <div class="controls">
                 <button id="checkBtn" class="check-btn" onclick="manualCheck()">Check Answer</button>
+                <button id="nextWordBtn" class="flashy-next-btn" onclick="skipToNextWord()">⏭️ NEXT WORD</button>
+                
                 <div id="feedbackMessage" class="feedback"></div>
                 <button class="back-btn" onclick="returnToLobby()">⬅ Return to Lobby</button>
             </div>
@@ -215,20 +226,28 @@
         const totalSets = 7; 
         const middleSetStartIndex = 3 * alphabetLength; 
         
-        let activeFamilies = []; // Queue of base word families
+        let activeFamilies = []; 
         let currentFamily = null;
-        let currentPhaseIndex = 0; // 0=1st letter, 1=2nd, 2=3rd
-        let currentPhaseWords = []; // Words inside the current phase
+        let currentPhaseIndex = 0; 
+        let currentPhaseWords = []; 
         let currentWordIndex = 0;
         
         let score = 0;
         let spinTimeout = null;
         let scrollEndTimer = null;
+        
+        // State management
         let isProcessing = false; 
         let isTeleporting = false; 
-        let attemptCount = 0; 
+        let isLevelLocked = false; // Prevents spinning during strike 3
+        
+        // Scoring and attempt variables
+        let currentAttempt = 1; 
+        let usedAudio = false;
+        let autoAdvanceTimer = null;
 
         function speakWord() {
+            usedAudio = true; // Mark that they used the hint for scoring!
             const level = currentPhaseWords[currentWordIndex];
             let fullWord = "";
             for(let char of level.pattern) {
@@ -248,14 +267,13 @@
                 (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Zira') || v.name.includes('Google US English')));
             
             if (femaleVoice) { utterance.voice = femaleVoice; }
-            
             window.speechSynthesis.speak(utterance);
         }
 
         window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
 
         document.addEventListener('keydown', function(event) {
-            if (document.getElementById('playContainer').style.display === 'none' || isProcessing || isTeleporting) return;
+            if (document.getElementById('playContainer').style.display === 'none' || isProcessing || isTeleporting || isLevelLocked) return;
             
             const key = event.key.toUpperCase();
             let targetIndex = -1;
@@ -280,32 +298,28 @@
         });
 
         function startGame(letterCount) {
-            // Get all families and shuffle them
             activeFamilies = [...wordDatabase[letterCount]].sort(() => Math.random() - 0.5);
-            
             score = 0;
             document.getElementById('score').textContent = score;
-            
             document.getElementById('lobbyContainer').style.display = 'none';
             document.getElementById('playContainer').style.display = 'block';
-            
             loadNextFamily();
         }
 
-        // --- NEW: PHASE LOGIC FUNCTIONS ---
         function loadNextFamily() {
             if (activeFamilies.length === 0) {
-                // You beat the entire dictionary!
                 document.getElementById('baseWordArea').style.display = 'none';
                 document.getElementById('imageClue').textContent = "🏆";
                 document.getElementById('wordDisplay').innerHTML = "<h2 style='color: var(--success-green); text-shadow: 0 0 10px var(--success-green);'>ALL FAMILIES COMPLETE!</h2>";
                 document.getElementById('phaseInstruction').style.display = 'none';
                 document.getElementById('checkBtn').style.display = 'none';
+                document.getElementById('listenBtn').style.display = 'none';
+                document.getElementById('showTurkBtn').style.display = 'none';
                 document.getElementById('feedbackMessage').textContent = "MASTER OF WORDS!";
                 return;
             }
 
-            currentFamily = activeFamilies.pop(); // Take the next random family
+            currentFamily = activeFamilies.pop(); 
             document.getElementById('baseWordDisplay').textContent = currentFamily.baseWord;
             document.getElementById('baseWordArea').style.display = 'inline-block';
             
@@ -314,10 +328,8 @@
         }
 
         function loadPhase() {
-            // Loop until we find a phase that actually has words in it
             while(currentPhaseIndex <= 2) {
                 if (currentFamily.changes[currentPhaseIndex] && currentFamily.changes[currentPhaseIndex].length > 0) {
-                    // Shuffle the words inside this specific phase
                     currentPhaseWords = [...currentFamily.changes[currentPhaseIndex]].sort(() => Math.random() - 0.5);
                     currentWordIndex = 0;
 
@@ -331,12 +343,9 @@
                 currentPhaseIndex++;
             }
             
-            // If we get here, all phases for this family are done. Load the next family!
             document.getElementById('feedbackMessage').textContent = "Family Complete!";
             document.getElementById('feedbackMessage').className = "feedback correct";
-            setTimeout(() => {
-                loadNextFamily();
-            }, 1500);
+            setTimeout(() => { loadNextFamily(); }, 1500);
         }
 
         function returnToLobby() {
@@ -344,15 +353,14 @@
             document.getElementById('playContainer').style.display = 'none';
             clearTimeout(spinTimeout);
             clearTimeout(scrollEndTimer);
+            clearTimeout(autoAdvanceTimer);
             window.speechSynthesis.cancel(); 
         }
 
         function revealTurkish() {
-            const btn = document.getElementById('showTurkBtn');
-            const translationDiv = document.getElementById('turkTranslation');
-            btn.style.display = 'none';
-            translationDiv.style.display = 'block';
-            translationDiv.textContent = currentPhaseWords[currentWordIndex].turkish;
+            document.getElementById('showTurkBtn').style.display = 'none';
+            document.getElementById('turkTranslation').style.display = 'block';
+            document.getElementById('turkTranslation').textContent = currentPhaseWords[currentWordIndex].turkish;
         }
 
         function resetTools() {
@@ -360,12 +368,20 @@
             document.getElementById('turkTranslation').style.display = 'none';
             document.getElementById('turkTranslation').textContent = '';
             
+            // Audio button is always unlocked now
             const listenBtn = document.getElementById('listenBtn');
             listenBtn.style.display = 'inline-block';
-            listenBtn.disabled = true;
-            listenBtn.innerHTML = '🔒 AUDIO LOCKED';
+            listenBtn.disabled = false;
+            listenBtn.innerHTML = '🔊 LISTEN';
+
+            // Hide the flashy skip button on reset
+            document.getElementById('nextWordBtn').style.display = 'none';
             
-            attemptCount = 0; 
+            // Reset scoring states for the new word
+            currentAttempt = 1; 
+            usedAudio = false;
+            isLevelLocked = false;
+            clearTimeout(autoAdvanceTimer);
         }
 
         function initLevel() {
@@ -433,18 +449,18 @@
             
             const spinner = document.getElementById('letterSpinner');
             isTeleporting = true;
-            spinner.scrollTo({ top: (middleSetStartIndex + 1) * 70 }); 
+            spinner.scrollTo({ top: (middleSetStartIndex + 1) * 70 }); // Snap to blank
             setTimeout(() => { isTeleporting = false; }, 50);
         }
 
         function spinByButton(direction) {
-            if (isProcessing) return;
+            if (isProcessing || isLevelLocked) return;
             const spinner = document.getElementById('letterSpinner');
             spinner.scrollBy({ top: direction * 70, behavior: 'smooth' });
         }
 
         function handleSpin() {
-            if (isProcessing || isTeleporting) return;
+            if (isProcessing || isTeleporting || isLevelLocked) return;
             
             const feedback = document.getElementById('feedbackMessage');
             feedback.textContent = "";
@@ -473,13 +489,13 @@
         }
 
         function manualCheck() {
-            if (isProcessing) return;
+            if (isProcessing || isLevelLocked) return;
             clearTimeout(spinTimeout); 
             checkAnswer();
         }
 
         function checkAnswer() {
-            if (isProcessing) return;
+            if (isProcessing || isLevelLocked) return;
             
             const spinner = document.getElementById('letterSpinner');
             const feedback = document.getElementById('feedbackMessage');
@@ -491,46 +507,88 @@
             const normalizedIndex = ((selectedIndex % alphabetLength) + alphabetLength) % alphabetLength;
             const selectedLetter = alphabet[normalizedIndex];
 
-            if (selectedLetter === "") { return; }
+            if (selectedLetter === "") { return; } // Ignore blank spins
 
             if (selectedLetter === level.answer) {
                 isProcessing = true;
                 document.getElementById('checkBtn').disabled = true;
-                score += 10;
+                
+                // --- THE NEW SCORING ENGINE ---
+                let pointsEarned = 0;
+                if (currentAttempt === 1) {
+                    pointsEarned = usedAudio ? 10 : 20;
+                } else if (currentAttempt === 2) {
+                    pointsEarned = 10;
+                } else {
+                    pointsEarned = 5;
+                }
+
+                score += pointsEarned;
                 document.getElementById('score').textContent = score;
-                feedback.textContent = "CORRECT! +10";
+                feedback.textContent = `CORRECT! +${pointsEarned}`;
                 feedback.className = "feedback correct";
                 
                 document.getElementById('showTurkBtn').style.display = 'none';
                 document.getElementById('turkTranslation').style.display = 'block';
                 document.getElementById('turkTranslation').textContent = level.turkish;
                 
-                const listenBtn = document.getElementById('listenBtn');
-                listenBtn.disabled = true;
-                listenBtn.innerHTML = '🔒 AUDIO LOCKED';
-                listenBtn.style.display = 'none'; 
+                document.getElementById('listenBtn').style.display = 'none'; 
                 
                 setTimeout(() => {
-                    currentWordIndex++;
-                    // Check if we finished this specific phase
-                    if (currentWordIndex >= currentPhaseWords.length) {
-                        currentPhaseIndex++;
-                        loadPhase(); // This will auto-advance to next phase or next family!
-                    } else {
-                        initLevel();
-                    }
+                    advanceToNextWord();
                 }, 2500); 
 
             } else {
-                feedback.textContent = "NOT QUITE. TRY AGAIN!";
-                feedback.className = "feedback wrong";
-                
-                attemptCount++;
-                if (attemptCount >= 2) {
-                    const listenBtn = document.getElementById('listenBtn');
-                    listenBtn.disabled = false;
-                    listenBtn.innerHTML = '🔊 LISTEN';
+                if (currentAttempt < 3) {
+                    // Try again
+                    feedback.textContent = "NOT QUITE. TRY AGAIN!";
+                    feedback.className = "feedback wrong";
+                    currentAttempt++;
+                } else {
+                    // --- STRIKE 3: THE FAIL STATE SEQUENCE ---
+                    isLevelLocked = true; // Stop them from spinning
+                    document.getElementById('checkBtn').style.display = 'none';
+                    document.getElementById('listenBtn').style.display = 'none';
+                    
+                    feedback.textContent = "OUT OF TRIES!";
+                    feedback.className = "feedback wrong";
+
+                    // Automatically show the Turkish meaning
+                    document.getElementById('showTurkBtn').style.display = 'none';
+                    document.getElementById('turkTranslation').style.display = 'block';
+                    document.getElementById('turkTranslation').textContent = level.turkish;
+
+                    // Automatically spin the wheel to the correct answer
+                    const targetIndex = alphabet.indexOf(level.answer);
+                    if (targetIndex !== -1) {
+                        const absoluteIndex = middleSetStartIndex + targetIndex;
+                        spinner.scrollTo({ top: absoluteIndex * 70, behavior: 'smooth' });
+                    }
+
+                    // Reveal the Flashy Next Word button
+                    document.getElementById('nextWordBtn').style.display = 'inline-block';
+
+                    // Set the 6 second timer
+                    autoAdvanceTimer = setTimeout(() => {
+                        advanceToNextWord();
+                    }, 6000);
                 }
+            }
+        }
+
+        // Triggered manually if the student clicks the flashy skip button
+        function skipToNextWord() {
+            clearTimeout(autoAdvanceTimer);
+            advanceToNextWord();
+        }
+
+        function advanceToNextWord() {
+            currentWordIndex++;
+            if (currentWordIndex >= currentPhaseWords.length) {
+                currentPhaseIndex++;
+                loadPhase(); 
+            } else {
+                initLevel();
             }
         }
     </script>
