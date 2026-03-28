@@ -39,7 +39,7 @@
             border-radius: 16px;
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.05);
             width: 100%;
-            max-width: 550px;
+            max-width: 600px;
             border: 1px solid #222;
         }
 
@@ -54,6 +54,7 @@
             100% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-cyan); }
         }
 
+        /* --- LOBBY STYLES --- */
         #lobbyContainer { display: block; }
         .lobby-subtitle { color: var(--neon-cyan); margin-bottom: 30px; font-size: 18px; letter-spacing: 1px; }
         
@@ -68,6 +69,37 @@
         .level-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; background-color: transparent; }
         .btn-icon { font-size: 24px; }
 
+        /* --- NEW: SET SELECTION SUB-MENU --- */
+        #setSelectionContainer { display: none; }
+        .set-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            /* Hide scrollbar for clean look */
+            scrollbar-width: none; 
+            -ms-overflow-style: none;
+        }
+        .set-grid::-webkit-scrollbar { display: none; }
+        
+        .set-btn {
+            width: calc(50% - 15px); /* Two columns */
+            margin: 0;
+            padding: 15px 10px;
+            font-size: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+        .set-base-word { color: var(--warning-yellow); font-size: 16px; font-weight: bold; letter-spacing: 2px; }
+
+        /* --- GAME AREA STYLES --- */
         #playContainer { display: none; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .header h2 { margin: 0; color: #fff; font-size: 24px; text-shadow: 0 0 10px var(--neon-cyan); }
@@ -119,24 +151,10 @@
         }
         .check-btn:hover { background-color: var(--neon-cyan); color: #000; box-shadow: 0 0 20px var(--neon-cyan); }
         .check-btn:active { transform: scale(0.95); }
-        .check-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; box-shadow: none; background: transparent; }
+        .check-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; box-shadow: none; background: transparent; display: none; }
 
-        /* --- NEW: THE FLASHY NEXT WORD BUTTON --- */
         .flashy-next-btn {
-            background-color: var(--warning-yellow);
-            color: #000;
-            border: none;
-            padding: 15px 40px;
-            font-size: 22px;
-            font-weight: 900;
-            border-radius: 8px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(255, 234, 0, 0.6);
-            animation: pulse-flashy 0.8s infinite alternate;
-            margin-top: 10px;
-            display: none; /* Hidden until strike 3 */
+            background-color: var(--warning-yellow); color: #000; border: none; padding: 15px 40px; font-size: 22px; font-weight: 900; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 20px rgba(255, 234, 0, 0.6); animation: pulse-flashy 0.8s infinite alternate; margin-top: 10px; display: none; 
         }
         @keyframes pulse-flashy {
             0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 234, 0, 0.5); }
@@ -161,7 +179,7 @@
             <h1 class="lobby-title neon-title">Word Wheel</h1>
             <p class="lobby-subtitle">SELECT YOUR CHALLENGE</p>
             
-            <button class="level-btn" onclick="startGame(3)">
+            <button class="level-btn" onclick="openSetMenu(3)">
                 <span class="btn-icon">🥉</span>
                 3-Letter Words
                 <span class="btn-icon" style="opacity: 0;">🥉</span> 
@@ -181,6 +199,16 @@
                 6-Letter Words
                 <span class="btn-icon">🔒</span>
             </button>
+        </div>
+
+        <div id="setSelectionContainer">
+            <h1 class="lobby-title neon-title" id="setMenuTitle">3-LETTER SETS</h1>
+            <p class="lobby-subtitle">CHOOSE YOUR FAMILY</p>
+            
+            <div id="setButtonsGrid" class="set-grid">
+                </div>
+
+            <button class="back-btn" onclick="returnToMainLobby()">⬅ Return to Main Menu</button>
         </div>
 
         <div id="playContainer">
@@ -212,7 +240,7 @@
                 <button id="nextWordBtn" class="flashy-next-btn" onclick="skipToNextWord()">⏭️ NEXT WORD</button>
                 
                 <div id="feedbackMessage" class="feedback"></div>
-                <button class="back-btn" onclick="returnToLobby()">⬅ Return to Lobby</button>
+                <button id="returnSetsBtn" class="back-btn" onclick="returnToSetMenu()">⬅ Return to Sets</button>
             </div>
         </div>
 
@@ -226,7 +254,7 @@
         const totalSets = 7; 
         const middleSetStartIndex = 3 * alphabetLength; 
         
-        let activeFamilies = []; 
+        let currentActiveLetterCount = 3; // Remembers if we are playing 3, 4, or 5 letter words
         let currentFamily = null;
         let currentPhaseIndex = 0; 
         let currentPhaseWords = []; 
@@ -236,18 +264,17 @@
         let spinTimeout = null;
         let scrollEndTimer = null;
         
-        // State management
         let isProcessing = false; 
         let isTeleporting = false; 
-        let isLevelLocked = false; // Prevents spinning during strike 3
+        let isLevelLocked = false; 
         
-        // Scoring and attempt variables
         let currentAttempt = 1; 
         let usedAudio = false;
         let autoAdvanceTimer = null;
 
+        // --- AUDIO ENGINE ---
         function speakWord() {
-            usedAudio = true; // Mark that they used the hint for scoring!
+            usedAudio = true; 
             const level = currentPhaseWords[currentWordIndex];
             let fullWord = "";
             for(let char of level.pattern) {
@@ -269,9 +296,9 @@
             if (femaleVoice) { utterance.voice = femaleVoice; }
             window.speechSynthesis.speak(utterance);
         }
-
         window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
 
+        // --- KEYBOARD CONTROLS ---
         document.addEventListener('keydown', function(event) {
             if (document.getElementById('playContainer').style.display === 'none' || isProcessing || isTeleporting || isLevelLocked) return;
             
@@ -297,36 +324,64 @@
             }
         });
 
-        function startGame(letterCount) {
-            activeFamilies = [...wordDatabase[letterCount]].sort(() => Math.random() - 0.5);
-            score = 0;
-            document.getElementById('score').textContent = score;
+        // --- NEW MENU NAVIGATION FLOW ---
+        
+        // 1. Open the Sub-Menu
+        function openSetMenu(letterCount) {
+            currentActiveLetterCount = letterCount;
             document.getElementById('lobbyContainer').style.display = 'none';
-            document.getElementById('playContainer').style.display = 'block';
-            loadNextFamily();
+            document.getElementById('setSelectionContainer').style.display = 'block';
+            document.getElementById('setMenuTitle').textContent = `${letterCount}-LETTER SETS`;
+
+            const grid = document.getElementById('setButtonsGrid');
+            grid.innerHTML = ''; // Clear old buttons
+            
+            const families = wordDatabase[letterCount];
+            
+            families.forEach((family, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'level-btn set-btn';
+                btn.innerHTML = `SET ${index + 1} <span class="set-base-word">(${family.baseWord})</span>`;
+                btn.onclick = () => startSpecificSet(index);
+                grid.appendChild(btn);
+            });
         }
 
-        function loadNextFamily() {
-            if (activeFamilies.length === 0) {
-                document.getElementById('baseWordArea').style.display = 'none';
-                document.getElementById('imageClue').textContent = "🏆";
-                document.getElementById('wordDisplay').innerHTML = "<h2 style='color: var(--success-green); text-shadow: 0 0 10px var(--success-green);'>ALL FAMILIES COMPLETE!</h2>";
-                document.getElementById('phaseInstruction').style.display = 'none';
-                document.getElementById('checkBtn').style.display = 'none';
-                document.getElementById('listenBtn').style.display = 'none';
-                document.getElementById('showTurkBtn').style.display = 'none';
-                document.getElementById('feedbackMessage').textContent = "MASTER OF WORDS!";
-                return;
-            }
+        // 2. Return to Main Menu
+        function returnToMainLobby() {
+            document.getElementById('setSelectionContainer').style.display = 'none';
+            document.getElementById('lobbyContainer').style.display = 'block';
+            window.speechSynthesis.cancel();
+        }
 
-            currentFamily = activeFamilies.pop(); 
+        // 3. Return to Set Menu (from the game)
+        function returnToSetMenu() {
+            document.getElementById('playContainer').style.display = 'none';
+            document.getElementById('setSelectionContainer').style.display = 'block';
+            clearTimeout(spinTimeout);
+            clearTimeout(scrollEndTimer);
+            clearTimeout(autoAdvanceTimer);
+            window.speechSynthesis.cancel();
+        }
+
+        // 4. Start the specific Set
+        function startSpecificSet(familyIndex) {
+            currentFamily = wordDatabase[currentActiveLetterCount][familyIndex];
+            currentPhaseIndex = 0;
+            score = 0;
+            document.getElementById('score').textContent = score;
+
+            document.getElementById('setSelectionContainer').style.display = 'none';
+            document.getElementById('playContainer').style.display = 'block';
+
             document.getElementById('baseWordDisplay').textContent = currentFamily.baseWord;
             document.getElementById('baseWordArea').style.display = 'inline-block';
-            
-            currentPhaseIndex = 0;
+            document.getElementById('returnSetsBtn').style.display = 'block'; 
+
             loadPhase();
         }
 
+        // --- GAMEPLAY LOGIC ---
         function loadPhase() {
             while(currentPhaseIndex <= 2) {
                 if (currentFamily.changes[currentPhaseIndex] && currentFamily.changes[currentPhaseIndex].length > 0) {
@@ -343,18 +398,17 @@
                 currentPhaseIndex++;
             }
             
-            document.getElementById('feedbackMessage').textContent = "Family Complete!";
+            // --- NEW: SET COMPLETE VICTORY STATE ---
+            document.getElementById('imageClue').textContent = "🏆";
+            document.getElementById('wordDisplay').innerHTML = "<h2 style='color: var(--success-green); text-shadow: 0 0 10px var(--success-green);'>SET COMPLETE!</h2>";
+            document.getElementById('phaseInstruction').style.display = 'none';
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('listenBtn').style.display = 'none';
+            document.getElementById('showTurkBtn').style.display = 'none';
+            document.getElementById('nextWordBtn').style.display = 'none';
+            
+            document.getElementById('feedbackMessage').textContent = "AMAZING JOB!";
             document.getElementById('feedbackMessage').className = "feedback correct";
-            setTimeout(() => { loadNextFamily(); }, 1500);
-        }
-
-        function returnToLobby() {
-            document.getElementById('lobbyContainer').style.display = 'block';
-            document.getElementById('playContainer').style.display = 'none';
-            clearTimeout(spinTimeout);
-            clearTimeout(scrollEndTimer);
-            clearTimeout(autoAdvanceTimer);
-            window.speechSynthesis.cancel(); 
         }
 
         function revealTurkish() {
@@ -368,16 +422,13 @@
             document.getElementById('turkTranslation').style.display = 'none';
             document.getElementById('turkTranslation').textContent = '';
             
-            // Audio button is always unlocked now
             const listenBtn = document.getElementById('listenBtn');
             listenBtn.style.display = 'inline-block';
             listenBtn.disabled = false;
             listenBtn.innerHTML = '🔊 LISTEN';
 
-            // Hide the flashy skip button on reset
             document.getElementById('nextWordBtn').style.display = 'none';
             
-            // Reset scoring states for the new word
             currentAttempt = 1; 
             usedAudio = false;
             isLevelLocked = false;
@@ -449,7 +500,7 @@
             
             const spinner = document.getElementById('letterSpinner');
             isTeleporting = true;
-            spinner.scrollTo({ top: (middleSetStartIndex + 1) * 70 }); // Snap to blank
+            spinner.scrollTo({ top: (middleSetStartIndex + 1) * 70 }); 
             setTimeout(() => { isTeleporting = false; }, 50);
         }
 
@@ -507,21 +558,16 @@
             const normalizedIndex = ((selectedIndex % alphabetLength) + alphabetLength) % alphabetLength;
             const selectedLetter = alphabet[normalizedIndex];
 
-            if (selectedLetter === "") { return; } // Ignore blank spins
+            if (selectedLetter === "") { return; } 
 
             if (selectedLetter === level.answer) {
                 isProcessing = true;
                 document.getElementById('checkBtn').disabled = true;
                 
-                // --- THE NEW SCORING ENGINE ---
                 let pointsEarned = 0;
-                if (currentAttempt === 1) {
-                    pointsEarned = usedAudio ? 10 : 20;
-                } else if (currentAttempt === 2) {
-                    pointsEarned = 10;
-                } else {
-                    pointsEarned = 5;
-                }
+                if (currentAttempt === 1) { pointsEarned = usedAudio ? 10 : 20; } 
+                else if (currentAttempt === 2) { pointsEarned = 10; } 
+                else { pointsEarned = 5; }
 
                 score += pointsEarned;
                 document.getElementById('score').textContent = score;
@@ -531,52 +577,39 @@
                 document.getElementById('showTurkBtn').style.display = 'none';
                 document.getElementById('turkTranslation').style.display = 'block';
                 document.getElementById('turkTranslation').textContent = level.turkish;
-                
                 document.getElementById('listenBtn').style.display = 'none'; 
                 
-                setTimeout(() => {
-                    advanceToNextWord();
-                }, 2500); 
+                setTimeout(() => { advanceToNextWord(); }, 2000); 
 
             } else {
                 if (currentAttempt < 3) {
-                    // Try again
                     feedback.textContent = "NOT QUITE. TRY AGAIN!";
                     feedback.className = "feedback wrong";
                     currentAttempt++;
                 } else {
-                    // --- STRIKE 3: THE FAIL STATE SEQUENCE ---
-                    isLevelLocked = true; // Stop them from spinning
+                    isLevelLocked = true; 
                     document.getElementById('checkBtn').style.display = 'none';
                     document.getElementById('listenBtn').style.display = 'none';
                     
                     feedback.textContent = "OUT OF TRIES!";
                     feedback.className = "feedback wrong";
 
-                    // Automatically show the Turkish meaning
                     document.getElementById('showTurkBtn').style.display = 'none';
                     document.getElementById('turkTranslation').style.display = 'block';
                     document.getElementById('turkTranslation').textContent = level.turkish;
 
-                    // Automatically spin the wheel to the correct answer
                     const targetIndex = alphabet.indexOf(level.answer);
                     if (targetIndex !== -1) {
                         const absoluteIndex = middleSetStartIndex + targetIndex;
                         spinner.scrollTo({ top: absoluteIndex * 70, behavior: 'smooth' });
                     }
 
-                    // Reveal the Flashy Next Word button
                     document.getElementById('nextWordBtn').style.display = 'inline-block';
-
-                    // Set the 6 second timer
-                    autoAdvanceTimer = setTimeout(() => {
-                        advanceToNextWord();
-                    }, 6000);
+                    autoAdvanceTimer = setTimeout(() => { advanceToNextWord(); }, 6000);
                 }
             }
         }
 
-        // Triggered manually if the student clicks the flashy skip button
         function skipToNextWord() {
             clearTimeout(autoAdvanceTimer);
             advanceToNextWord();
