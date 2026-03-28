@@ -1,340 +1,538 @@
-// words.js - Phase Progression Edition
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Spinner: Arcade Edition</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0c; 
+            --container-bg: #15151a;
+            --text-main: #ffffff;
+            --text-muted: #888;
+            --neon-cyan: #00f3ff;
+            --neon-cyan-dim: rgba(0, 243, 255, 0.2);
+            --success-green: #00ff66;
+            --error-red: #ff0055;
+            --letter-bg: #1e1e24;
+            --letter-border: #333;
+            --warning-yellow: #ffea00;
+            --audio-purple: #b5179e;
+        }
 
-const wordDatabase = {
-    3: [
-        {
-            baseWord: "BAT",
-            changes: {
-                0: [ // 1st Letter Changes
-                    { pattern: ["?", "A", "T"], answer: "C", icon: "🐈", turkish: "Kedi" },
-                    { pattern: ["?", "A", "T"], answer: "F", icon: "⚖️", turkish: "Şişman / Yağ" },
-                    { pattern: ["?", "A", "T"], answer: "H", icon: "🎩", turkish: "Şapka" },
-                    { pattern: ["?", "A", "T"], answer: "M", icon: "🚪", turkish: "Paspas / Minder" },
-                    { pattern: ["?", "A", "T"], answer: "P", icon: "👋", turkish: "Hafifçe vurmak" },
-                    { pattern: ["?", "A", "T"], answer: "R", icon: "🐀", turkish: "Fare" },
-                    { pattern: ["?", "A", "T"], answer: "V", icon: "🛢️", turkish: "Fıçı" }
-                ],
-                1: [ // 2nd Letter Changes
-                    { pattern: ["B", "?", "T"], answer: "U", icon: "🤔", turkish: "Ama / Fakat" }
-                ],
-                2: [ // 3rd Letter Changes
-                    { pattern: ["B", "A", "?"], answer: "D", icon: "👎", turkish: "Kötü" },
-                    { pattern: ["B", "A", "?"], answer: "G", icon: "👜", turkish: "Çanta" },
-                    { pattern: ["B", "A", "?"], answer: "N", icon: "🚫", turkish: "Yasak" },
-                    { pattern: ["B", "A", "?"], answer: "R", icon: "🍫", turkish: "Çubuk / Bar" }
-                ]
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, var(--bg-color) 70%);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .game-container {
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.05);
+            width: 100%;
+            max-width: 550px;
+            border: 1px solid #222;
+        }
+
+        .neon-title {
+            font-size: 42px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 80px var(--neon-cyan);
+            animation: pulse-neon 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-neon {
+            0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
+            100% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-cyan); }
+        }
+
+        #lobbyContainer { display: block; }
+        .lobby-subtitle { color: var(--neon-cyan); margin-bottom: 30px; font-size: 18px; letter-spacing: 1px; }
+        
+        .level-btn {
+            background-color: var(--letter-bg); color: var(--text-main); border: 2px solid #333; padding: 15px 25px; font-size: 20px; font-weight: bold; border-radius: 12px; cursor: pointer; margin: 10px; width: 85%; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .level-btn:not(:disabled):hover { 
+            background-color: var(--neon-cyan-dim); border-color: var(--neon-cyan); color: #fff; box-shadow: 0 0 15px var(--neon-cyan); transform: scale(1.05); 
+        }
+
+        .level-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; background-color: transparent; }
+        .btn-icon { font-size: 24px; }
+
+        #playContainer { display: none; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header h2 { margin: 0; color: #fff; font-size: 24px; text-shadow: 0 0 10px var(--neon-cyan); }
+        
+        .score-board {
+            font-size: 20px; font-weight: bold; color: var(--neon-cyan); background: var(--letter-bg); padding: 8px 16px; border-radius: 12px; border: 1px solid var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan-dim);
+        }
+
+        /* --- NEW: BASE WORD HUD --- */
+        .base-word-area {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 12px;
+            padding: 10px 20px;
+            margin: 15px auto;
+            display: inline-block;
+            box-shadow: 0 0 15px var(--neon-cyan-dim);
+        }
+        .base-word-label {
+            color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;
+        }
+        .base-word-text {
+            font-size: 36px; font-weight: bold; color: var(--warning-yellow); letter-spacing: 8px; text-shadow: 0 0 15px rgba(255, 234, 0, 0.5);
+        }
+        .phase-instruction {
+            color: var(--success-green); font-size: 20px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+        }
+
+        .image-clue { font-size: 110px; margin: 15px 0; text-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: popIn 0.5s ease; }
+
+        .word-display { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+        
+        .static-letter {
+            font-size: 48px; font-weight: bold; text-transform: uppercase; color: #fff; width: 60px; height: 70px; display: flex; justify-content: center; align-items: center; background: var(--letter-bg); border-radius: 8px; border: 2px solid var(--letter-border); box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .spinner-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .spin-btn { background: transparent; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s, text-shadow 0.2s; }
+        .spin-btn:hover { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
+
+        .spinner-container {
+            width: 60px; height: 70px; overflow-y: scroll; scroll-snap-type: y mandatory; border: 3px solid var(--neon-cyan); border-radius: 8px; background: var(--letter-bg); position: relative; box-shadow: 0 0 20px var(--neon-cyan-dim), inset 0 0 15px rgba(0,0,0,0.8); scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .spinner-container::-webkit-scrollbar { display: none; }
+        .spinner-letter { height: 70px; display: flex; justify-content: center; align-items: center; font-size: 44px; font-weight: bold; color: var(--neon-cyan); scroll-snap-align: start; text-shadow: 0 0 5px var(--neon-cyan); }
+
+        .tools-area { margin-top: 15px; display: flex; justify-content: center; gap: 15px; align-items: center; min-height: 40px; }
+        
+        .tool-btn { background: transparent; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: all 0.3s; }
+        .turkish-btn { border: 1px solid var(--warning-yellow); color: var(--warning-yellow); text-shadow: 0 0 5px rgba(255, 234, 0, 0.5); }
+        .turkish-btn:hover { background: var(--warning-yellow); color: #000; box-shadow: 0 0 15px var(--warning-yellow); }
+        
+        .listen-btn { border: 1px solid var(--audio-purple); color: var(--audio-purple); text-shadow: 0 0 5px rgba(181, 23, 158, 0.5); animation: popIn 0.3s ease; }
+        .listen-btn:hover:not(:disabled) { background: var(--audio-purple); color: #fff; box-shadow: 0 0 15px var(--audio-purple); }
+        .listen-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; text-shadow: none; box-shadow: none; background: transparent; }
+
+        .turkish-translation { display: none; font-size: 22px; font-weight: bold; color: var(--warning-yellow); text-shadow: 0 0 10px var(--warning-yellow); animation: popIn 0.3s ease; }
+
+        .controls { margin-top: 25px; }
+        .check-btn {
+            background-color: transparent; color: var(--neon-cyan); border: 2px solid var(--neon-cyan); padding: 12px 30px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .check-btn:hover { background-color: var(--neon-cyan); color: #000; box-shadow: 0 0 20px var(--neon-cyan); }
+        .check-btn:active { transform: scale(0.95); }
+        .check-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; box-shadow: none; background: transparent; }
+
+        .feedback { font-size: 22px; font-weight: bold; height: 30px; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .correct { color: var(--success-green); text-shadow: 0 0 10px var(--success-green); }
+        .wrong { color: var(--error-red); text-shadow: 0 0 10px var(--error-red); }
+
+        .back-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; margin-top: 20px; transition: color 0.2s; }
+        .back-btn:hover { color: #fff; text-shadow: 0 0 5px #fff; }
+
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        
+        <div id="lobbyContainer">
+            <h1 class="lobby-title neon-title">Word Wheel</h1>
+            <p class="lobby-subtitle">SELECT YOUR CHALLENGE</p>
+            
+            <button class="level-btn" onclick="startGame(3)">
+                <span class="btn-icon">🥉</span>
+                3-Letter Words
+                <span class="btn-icon" style="opacity: 0;">🥉</span> 
+            </button>
+            <button class="level-btn" disabled>
+                <span class="btn-icon" style="filter: grayscale(1);">🥈</span>
+                4-Letter Words
+                <span class="btn-icon">🔒</span>
+            </button>
+            <button class="level-btn" disabled>
+                <span class="btn-icon" style="filter: grayscale(1);">🥇</span>
+                5-Letter Words
+                <span class="btn-icon">🔒</span>
+            </button>
+            <button class="level-btn" disabled>
+                <span class="btn-icon" style="filter: grayscale(1);">🏆</span>
+                6-Letter Words
+                <span class="btn-icon">🔒</span>
+            </button>
+        </div>
+
+        <div id="playContainer">
+            <div class="header">
+                <h2>WORD WHEEL</h2>
+                <div class="score-board">PTS: <span id="score">0</span></div>
+            </div>
+
+            <div id="baseWordArea" class="base-word-area">
+                <div class="base-word-label">Target Base Word</div>
+                <div id="baseWordDisplay" class="base-word-text">BAT</div>
+            </div>
+
+            <div id="phaseInstruction" class="phase-instruction">Change the 1st letter!</div>
+
+            <div id="imageClue" class="image-clue">🔤</div>
+
+            <div id="wordDisplay" class="word-display">
+                </div>
+
+            <div class="tools-area">
+                <button id="listenBtn" class="tool-btn listen-btn" onclick="speakWord()">🔒 AUDIO LOCKED</button>
+                <button id="showTurkBtn" class="tool-btn turkish-btn" onclick="revealTurkish()">🇹🇷 SEE TURKISH</button>
+                <div id="turkTranslation" class="turkish-translation"></div>
+            </div>
+
+            <div class="controls">
+                <button id="checkBtn" class="check-btn" onclick="manualCheck()">Check Answer</button>
+                <div id="feedbackMessage" class="feedback"></div>
+                <button class="back-btn" onclick="returnToLobby()">⬅ Return to Lobby</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="words.js"></script>
+
+    <script>
+        const alphabet = ["REMOVE", "", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+        const alphabetLength = alphabet.length; 
+        const totalSets = 7; 
+        const middleSetStartIndex = 3 * alphabetLength; 
+        
+        let activeFamilies = []; // Queue of base word families
+        let currentFamily = null;
+        let currentPhaseIndex = 0; // 0=1st letter, 1=2nd, 2=3rd
+        let currentPhaseWords = []; // Words inside the current phase
+        let currentWordIndex = 0;
+        
+        let score = 0;
+        let spinTimeout = null;
+        let scrollEndTimer = null;
+        let isProcessing = false; 
+        let isTeleporting = false; 
+        let attemptCount = 0; 
+
+        function speakWord() {
+            const level = currentPhaseWords[currentWordIndex];
+            let fullWord = "";
+            for(let char of level.pattern) {
+                if(char === "?") {
+                    if(level.answer !== "REMOVE") fullWord += level.answer;
+                } else {
+                    fullWord += char;
+                }
             }
-        },
-        {
-            baseWord: "PAN",
-            changes: {
-                0: [
-                    { pattern: ["?", "A", "N"], answer: "B", icon: "🛑", turkish: "Yasaklamak" },
-                    { pattern: ["?", "A", "N"], answer: "C", icon: "🥫", turkish: "Teneke Kutu / Yapabilmek" },
-                    { pattern: ["?", "A", "N"], answer: "F", icon: "🌀", turkish: "Vantilatör / Taraftar" },
-                    { pattern: ["?", "A", "N"], answer: "M", icon: "👨", turkish: "Adam" },
-                    { pattern: ["?", "A", "N"], answer: "T", icon: "☀️", turkish: "Bronzlaşmak" },
-                    { pattern: ["?", "A", "N"], answer: "V", icon: "🚐", turkish: "Minibüs" }
-                ],
-                1: [
-                    { pattern: ["P", "?", "N"], answer: "E", icon: "🖊️", turkish: "Tükenmez Kalem" },
-                    { pattern: ["P", "?", "N"], answer: "I", icon: "📌", turkish: "Toplu İğne" },
-                    { pattern: ["P", "?", "N"], answer: "U", icon: "🎭", turkish: "Kelime Oyunu" }
-                ],
-                2: [
-                    { pattern: ["P", "A", "?"], answer: "D", icon: "📝", turkish: "Bloknot / Ped" },
-                    { pattern: ["P", "A", "?"], answer: "L", icon: "🤝", turkish: "Dost / Arkadaş" },
-                    { pattern: ["P", "A", "?"], answer: "T", icon: "👋", turkish: "Hafifçe Vurmak" },
-                    { pattern: ["P", "A", "?"], answer: "W", icon: "🐾", turkish: "Pati" },
-                    { pattern: ["P", "A", "?"], answer: "Y", icon: "💵", turkish: "Ödemek" }
-                ]
+
+            const utterance = new SpeechSynthesisUtterance(fullWord.toLowerCase());
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9; 
+            
+            const voices = window.speechSynthesis.getVoices();
+            const femaleVoice = voices.find(v => v.lang.startsWith('en') && 
+                (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Zira') || v.name.includes('Google US English')));
+            
+            if (femaleVoice) { utterance.voice = femaleVoice; }
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
+
+        document.addEventListener('keydown', function(event) {
+            if (document.getElementById('playContainer').style.display === 'none' || isProcessing || isTeleporting) return;
+            
+            const key = event.key.toUpperCase();
+            let targetIndex = -1;
+            
+            if (/^[A-Z]$/.test(key)) { targetIndex = alphabet.indexOf(key); } 
+            else if (event.key === "Backspace" || event.key === "Delete" || event.key === "-") { targetIndex = 0; }
+
+            if (targetIndex !== -1) {
+                const spinner = document.getElementById('letterSpinner');
+                const absoluteIndex = middleSetStartIndex + targetIndex;
+                spinner.scrollTo({ top: absoluteIndex * 70, behavior: 'smooth' });
+                
+                const feedback = document.getElementById('feedbackMessage');
+                feedback.textContent = "";
+                feedback.className = "feedback";
+                clearTimeout(spinTimeout);
+                clearTimeout(scrollEndTimer);
+
+                spinTimeout = setTimeout(() => { checkAnswer(); }, 2000); 
+                scrollEndTimer = setTimeout(() => { recenterSpinner(); }, 150);
             }
-        },
-        {
-            baseWord: "POT",
-            changes: {
-                0: [
-                    { pattern: ["?", "O", "T"], answer: "C", icon: "🛏️", turkish: "Karyola" },
-                    { pattern: ["?", "O", "T"], answer: "D", icon: "⏺️", turkish: "Nokta" },
-                    { pattern: ["?", "O", "T"], answer: "H", icon: "🔥", turkish: "Sıcak" },
-                    { pattern: ["?", "O", "T"], answer: "L", icon: "📚", turkish: "Çok / Parti" },
-                    { pattern: ["?", "O", "T"], answer: "N", icon: "❌", turkish: "Değil" },
-                    { pattern: ["?", "O", "T"], answer: "R", icon: "🤢", turkish: "Çürümek" }
-                ],
-                1: [
-                    { pattern: ["P", "?", "T"], answer: "A", icon: "👋", turkish: "Okşamak" },
-                    { pattern: ["P", "?", "T"], answer: "E", icon: "🐶", turkish: "Evcil Hayvan" },
-                    { pattern: ["P", "?", "T"], answer: "I", icon: "🕳️", turkish: "Çukur" }
-                ],
-                2: [
-                    { pattern: ["P", "O", "?"], answer: "D", icon: "🫛", turkish: "Koza" },
-                    { pattern: ["P", "O", "?"], answer: "P", icon: "🎈", turkish: "Patlamak" }
-                ]
+        });
+
+        function startGame(letterCount) {
+            // Get all families and shuffle them
+            activeFamilies = [...wordDatabase[letterCount]].sort(() => Math.random() - 0.5);
+            
+            score = 0;
+            document.getElementById('score').textContent = score;
+            
+            document.getElementById('lobbyContainer').style.display = 'none';
+            document.getElementById('playContainer').style.display = 'block';
+            
+            loadNextFamily();
+        }
+
+        // --- NEW: PHASE LOGIC FUNCTIONS ---
+        function loadNextFamily() {
+            if (activeFamilies.length === 0) {
+                // You beat the entire dictionary!
+                document.getElementById('baseWordArea').style.display = 'none';
+                document.getElementById('imageClue').textContent = "🏆";
+                document.getElementById('wordDisplay').innerHTML = "<h2 style='color: var(--success-green); text-shadow: 0 0 10px var(--success-green);'>ALL FAMILIES COMPLETE!</h2>";
+                document.getElementById('phaseInstruction').style.display = 'none';
+                document.getElementById('checkBtn').style.display = 'none';
+                document.getElementById('feedbackMessage').textContent = "MASTER OF WORDS!";
+                return;
             }
-        },
-        {
-            baseWord: "BUG",
-            changes: {
-                0: [
-                    { pattern: ["?", "U", "G"], answer: "H", icon: "🫂", turkish: "Sarılmak" },
-                    { pattern: ["?", "U", "G"], answer: "J", icon: "🏺", turkish: "Sürahi" },
-                    { pattern: ["?", "U", "G"], answer: "L", icon: "🏋️", turkish: "Sürüklemek / Taşımak" },
-                    { pattern: ["?", "U", "G"], answer: "M", icon: "☕", turkish: "Kupa" },
-                    { pattern: ["?", "U", "G"], answer: "P", icon: "🐕", turkish: "Pug (Köpek Cinsi)" },
-                    { pattern: ["?", "U", "G"], answer: "R", icon: "🧞", turkish: "Halı / Kilim" },
-                    { pattern: ["?", "U", "G"], answer: "T", icon: "🧗", turkish: "Güçle Çekmek" }
-                ],
-                1: [
-                    { pattern: ["B", "?", "G"], answer: "A", icon: "🎒", turkish: "Çanta" },
-                    { pattern: ["B", "?", "G"], answer: "E", icon: "🥺", turkish: "Yalvarmak" },
-                    { pattern: ["B", "?", "G"], answer: "I", icon: "🐘", turkish: "Büyük" },
-                    { pattern: ["B", "?", "G"], answer: "O", icon: "🐸", turkish: "Bataklık" }
-                ],
-                2: [
-                    { pattern: ["B", "U", "?"], answer: "D", icon: "🌱", turkish: "Tomurcuk" },
-                    { pattern: ["B", "U", "?"], answer: "M", icon: "🚶", turkish: "Serseri / Tembel" },
-                    { pattern: ["B", "U", "?"], answer: "N", icon: "🥯", turkish: "Çörek" },
-                    { pattern: ["B", "U", "?"], answer: "S", icon: "🚌", turkish: "Otobüs" },
-                    { pattern: ["B", "U", "?"], answer: "T", icon: "🤷", turkish: "Ama" }
-                ]
+
+            currentFamily = activeFamilies.pop(); // Take the next random family
+            document.getElementById('baseWordDisplay').textContent = currentFamily.baseWord;
+            document.getElementById('baseWordArea').style.display = 'inline-block';
+            
+            currentPhaseIndex = 0;
+            loadPhase();
+        }
+
+        function loadPhase() {
+            // Loop until we find a phase that actually has words in it
+            while(currentPhaseIndex <= 2) {
+                if (currentFamily.changes[currentPhaseIndex] && currentFamily.changes[currentPhaseIndex].length > 0) {
+                    // Shuffle the words inside this specific phase
+                    currentPhaseWords = [...currentFamily.changes[currentPhaseIndex]].sort(() => Math.random() - 0.5);
+                    currentWordIndex = 0;
+
+                    const phaseTexts = ["Change the 1st letter!", "Change the 2nd letter!", "Change the 3rd letter!"];
+                    document.getElementById('phaseInstruction').textContent = phaseTexts[currentPhaseIndex];
+                    document.getElementById('phaseInstruction').style.display = 'block';
+
+                    initLevel();
+                    return;
+                }
+                currentPhaseIndex++;
             }
-        },
-        {
-            baseWord: "TIP",
-            changes: {
-                0: [
-                    { pattern: ["?", "I", "P"], answer: "D", icon: "🥣", turkish: "Daldırmak" },
-                    { pattern: ["?", "I", "P"], answer: "H", icon: "🦴", turkish: "Kalça" },
-                    { pattern: ["?", "I", "P"], answer: "L", icon: "👄", turkish: "Dudak" },
-                    { pattern: ["?", "I", "P"], answer: "N", icon: "🤏", turkish: "Çimdiklemek" },
-                    { pattern: ["?", "I", "P"], answer: "R", icon: "📄", turkish: "Yırtmak" },
-                    { pattern: ["?", "I", "P"], answer: "S", icon: "🧃", turkish: "Yudumlamak" },
-                    { pattern: ["?", "I", "P"], answer: "Z", icon: "🤐", turkish: "Fermuar" }
-                ],
-                1: [
-                    { pattern: ["T", "?", "P"], answer: "A", icon: "🚰", turkish: "Musluk / Tıklamak" },
-                    { pattern: ["T", "?", "P"], answer: "O", icon: "⛰️", turkish: "Üst / Zirve" }
-                ],
-                2: [
-                    { pattern: ["T", "I", "?"], answer: "E", icon: "👔", turkish: "Kravat / Bağlamak" },
-                    { pattern: ["T", "I", "?"], answer: "N", icon: "🥫", turkish: "Teneke" }
-                ]
+            
+            // If we get here, all phases for this family are done. Load the next family!
+            document.getElementById('feedbackMessage').textContent = "Family Complete!";
+            document.getElementById('feedbackMessage').className = "feedback correct";
+            setTimeout(() => {
+                loadNextFamily();
+            }, 1500);
+        }
+
+        function returnToLobby() {
+            document.getElementById('lobbyContainer').style.display = 'block';
+            document.getElementById('playContainer').style.display = 'none';
+            clearTimeout(spinTimeout);
+            clearTimeout(scrollEndTimer);
+            window.speechSynthesis.cancel(); 
+        }
+
+        function revealTurkish() {
+            const btn = document.getElementById('showTurkBtn');
+            const translationDiv = document.getElementById('turkTranslation');
+            btn.style.display = 'none';
+            translationDiv.style.display = 'block';
+            translationDiv.textContent = currentPhaseWords[currentWordIndex].turkish;
+        }
+
+        function resetTools() {
+            document.getElementById('showTurkBtn').style.display = 'inline-block';
+            document.getElementById('turkTranslation').style.display = 'none';
+            document.getElementById('turkTranslation').textContent = '';
+            
+            const listenBtn = document.getElementById('listenBtn');
+            listenBtn.style.display = 'inline-block';
+            listenBtn.disabled = true;
+            listenBtn.innerHTML = '🔒 AUDIO LOCKED';
+            
+            attemptCount = 0; 
+        }
+
+        function initLevel() {
+            isProcessing = false;
+            document.getElementById('checkBtn').disabled = false;
+            document.getElementById('checkBtn').style.display = 'inline-block';
+            
+            resetTools();
+            
+            const level = currentPhaseWords[currentWordIndex];
+            document.getElementById('imageClue').textContent = level.icon;
+            document.getElementById('feedbackMessage').textContent = "";
+            
+            const wordDisplay = document.getElementById('wordDisplay');
+            wordDisplay.innerHTML = ''; 
+
+            for (let i = 0; i < level.pattern.length; i++) {
+                if (level.pattern[i] === "?") {
+                    
+                    const wrapperDiv = document.createElement('div');
+                    wrapperDiv.className = 'spinner-wrapper';
+
+                    const upBtn = document.createElement('button');
+                    upBtn.className = 'spin-btn';
+                    upBtn.innerHTML = '&#9650;'; 
+                    upBtn.onclick = () => spinByButton(-1);
+                    
+                    const spinnerContainer = document.createElement('div');
+                    spinnerContainer.className = 'spinner-container';
+                    spinnerContainer.id = 'letterSpinner';
+                    
+                    for(let set = 0; set < totalSets; set++) {
+                        alphabet.forEach(letter => {
+                            const letterDiv = document.createElement('div');
+                            letterDiv.className = 'spinner-letter';
+                            if (letter === "REMOVE") {
+                                letterDiv.style.color = "var(--error-red)";
+                                letterDiv.style.fontSize = "14px"; 
+                                letterDiv.style.textShadow = "0 0 5px var(--error-red)";
+                            }
+                            letterDiv.textContent = letter;
+                            spinnerContainer.appendChild(letterDiv);
+                        });
+                    }
+
+                    const downBtn = document.createElement('button');
+                    downBtn.className = 'spin-btn';
+                    downBtn.innerHTML = '&#9660;'; 
+                    downBtn.onclick = () => spinByButton(1);
+
+                    spinnerContainer.addEventListener('scroll', handleSpin);
+                    
+                    wrapperDiv.appendChild(upBtn);
+                    wrapperDiv.appendChild(spinnerContainer);
+                    wrapperDiv.appendChild(downBtn);
+                    wordDisplay.appendChild(wrapperDiv);
+
+                } else {
+                    const staticDiv = document.createElement('div');
+                    staticDiv.className = 'static-letter';
+                    staticDiv.textContent = level.pattern[i];
+                    wordDisplay.appendChild(staticDiv);
+                }
             }
-        },
-        {
-            baseWord: "NET",
-            changes: {
-                0: [
-                    { pattern: ["?", "E", "T"], answer: "B", icon: "🎰", turkish: "Bahis" },
-                    { pattern: ["?", "E", "T"], answer: "G", icon: "🤲", turkish: "Almak / Elde Etmek" },
-                    { pattern: ["?", "E", "T"], answer: "J", icon: "✈️", turkish: "Jet Uçağı" },
-                    { pattern: ["?", "E", "T"], answer: "L", icon: "👍", turkish: "İzin Vermek" },
-                    { pattern: ["?", "E", "T"], answer: "P", icon: "🐈", turkish: "Evcil Hayvan" },
-                    { pattern: ["?", "E", "T"], answer: "S", icon: "⚙️", turkish: "Set / Ayarlamak" },
-                    { pattern: ["?", "E", "T"], answer: "V", icon: "🩺", turkish: "Veteriner" }
-                ],
-                1: [
-                    { pattern: ["N", "?", "T"], answer: "U", icon: "🥜", turkish: "Kuruyemiş" }
-                ],
-                2: [
-                    { pattern: ["N", "E", "?"], answer: "W", icon: "✨", turkish: "Yeni" }
-                ]
-            }
-        },
-        {
-            baseWord: "FIN",
-            changes: {
-                0: [
-                    { pattern: ["?", "I", "N"], answer: "B", icon: "🗑️", turkish: "Kutu / Çöp Kutusu" },
-                    { pattern: ["?", "I", "N"], answer: "K", icon: "👨‍👩‍👦", turkish: "Akraba / Soy" },
-                    { pattern: ["?", "I", "N"], answer: "P", icon: "📍", turkish: "Toplu İğne" },
-                    { pattern: ["?", "I", "N"], answer: "S", icon: "😈", turkish: "Günah" },
-                    { pattern: ["?", "I", "N"], answer: "T", icon: "🥫", turkish: "Teneke Kutu" },
-                    { pattern: ["?", "I", "N"], answer: "W", icon: "🏆", turkish: "Kazanmak" }
-                ],
-                1: [
-                    { pattern: ["F", "?", "N"], answer: "A", icon: "🪭", turkish: "Taraftar / Vantilatör" },
-                    { pattern: ["F", "?", "N"], answer: "U", icon: "🎉", turkish: "Eğlence" }
-                ],
-                2: [
-                    { pattern: ["F", "I", "?"], answer: "B", icon: "🤥", turkish: "Küçük Yalan" },
-                    { pattern: ["F", "I", "?"], answer: "G", icon: "🍃", turkish: "İncir" },
-                    { pattern: ["F", "I", "?"], answer: "X", icon: "🔧", turkish: "Tamir Etmek" }
-                ]
-            }
-        },
-        {
-            baseWord: "CAP",
-            changes: {
-                0: [
-                    { pattern: ["?", "A", "P"], answer: "G", icon: "🌉", turkish: "Boşluk / Uçurum" },
-                    { pattern: ["?", "A", "P"], answer: "L", icon: "🏃", turkish: "Tur / Kucak" },
-                    { pattern: ["?", "A", "P"], answer: "M", icon: "🗺️", turkish: "Harita" },
-                    { pattern: ["?", "A", "P"], answer: "N", icon: "😴", turkish: "Şekerleme Yapmak" },
-                    { pattern: ["?", "A", "P"], answer: "R", icon: "🎤", turkish: "Rap / Sertçe Vurmak" },
-                    { pattern: ["?", "A", "P"], answer: "S", icon: "🍁", turkish: "Özsuyu" },
-                    { pattern: ["?", "A", "P"], answer: "T", icon: "🚰", turkish: "Musluk" },
-                    { pattern: ["?", "A", "P"], answer: "Y", icon: "🗣️", turkish: "Havlamak / Gevezelik Etmek" }
-                ],
-                1: [
-                    { pattern: ["C", "?", "P"], answer: "O", icon: "👮", turkish: "Polis" },
-                    { pattern: ["C", "?", "P"], answer: "U", icon: "☕", turkish: "Fincan / Kupa" }
-                ],
-                2: [
-                    { pattern: ["C", "A", "?"], answer: "B", icon: "🚕", turkish: "Taksi" },
-                    { pattern: ["C", "A", "?"], answer: "D", icon: "😒", turkish: "Kaba Adam" },
-                    { pattern: ["C", "A", "?"], answer: "M", icon: "📷", turkish: "Kamera (Kısa)" },
-                    { pattern: ["C", "A", "?"], answer: "N", icon: "🥫", turkish: "Teneke Kutu" },
-                    { pattern: ["C", "A", "?"], answer: "R", icon: "🚗", turkish: "Araba" },
-                    { pattern: ["C", "A", "?"], answer: "T", icon: "🐱", turkish: "Kedi" }
-                ]
-            }
-        },
-        {
-            baseWord: "HOP",
-            changes: {
-                0: [
-                    { pattern: ["?", "O", "P"], answer: "C", icon: "👮", turkish: "Polis" },
-                    { pattern: ["?", "O", "P"], answer: "M", icon: "🧹", turkish: "Paspas" },
-                    { pattern: ["?", "O", "P"], answer: "P", icon: "💥", turkish: "Patlamak" },
-                    { pattern: ["?", "O", "P"], answer: "T", icon: "🔝", turkish: "Üst" }
-                ],
-                1: [
-                    { pattern: ["H", "?", "P"], answer: "I", icon: "🦴", turkish: "Kalça" }
-                ],
-                2: [
-                    { pattern: ["H", "O", "?"], answer: "G", icon: "🐖", turkish: "Domuz" },
-                    { pattern: ["H", "O", "?"], answer: "T", icon: "🥵", turkish: "Sıcak" },
-                    { pattern: ["H", "O", "?"], answer: "W", icon: "❓", turkish: "Nasıl" }
-                ]
-            }
-        },
-        {
-            baseWord: "MAD",
-            changes: {
-                0: [
-                    { pattern: ["?", "A", "D"], answer: "B", icon: "👎", turkish: "Kötü" },
-                    { pattern: ["?", "A", "D"], answer: "D", icon: "👨‍👧", turkish: "Baba" },
-                    { pattern: ["?", "A", "D"], answer: "F", icon: "🕶️", turkish: "Geçici Moda / Heves" },
-                    { pattern: ["?", "A", "D"], answer: "P", icon: "📝", turkish: "Bloknot / Ped" },
-                    { pattern: ["?", "A", "D"], answer: "S", icon: "😢", turkish: "Üzgün" }
-                ],
-                1: [
-                    { pattern: ["M", "?", "D"], answer: "U", icon: "💩", turkish: "Çamur" }
-                ],
-                2: [
-                    { pattern: ["M", "A", "?"], answer: "C", icon: "🧥", turkish: "Yağmurluk (Mac)" },
-                    { pattern: ["M", "A", "?"], answer: "N", icon: "👨", turkish: "Adam" },
-                    { pattern: ["M", "A", "?"], answer: "P", icon: "🗺️", turkish: "Harita" },
-                    { pattern: ["M", "A", "?"], answer: "T", icon: "🚪", turkish: "Paspas" },
-                    { pattern: ["M", "A", "?"], answer: "W", icon: "👄", turkish: "Hayvan Ağzı / Mide" }
-                ]
-            }
-        },
-        {
-            baseWord: "TEN",
-            changes: {
-                0: [
-                    { pattern: ["?", "E", "N"], answer: "D", icon: "🐻", turkish: "İn / Mağara" },
-                    { pattern: ["?", "E", "N"], answer: "H", icon: "🐔", turkish: "Tavuk" },
-                    { pattern: ["?", "E", "N"], answer: "M", icon: "👨‍👨‍👦", turkish: "Adamlar (Çoğul)" },
-                    { pattern: ["?", "E", "N"], answer: "P", icon: "🖊️", turkish: "Tükenmez Kalem" }
-                ],
-                1: [
-                    { pattern: ["T", "?", "N"], answer: "A", icon: "☀️", turkish: "Bronzlaşmak" },
-                    { pattern: ["T", "?", "N"], answer: "I", icon: "🥫", turkish: "Teneke" },
-                    { pattern: ["T", "?", "N"], answer: "O", icon: "🐘", turkish: "Ton (Ağırlık)" }
-                ],
-                2: [
-                    { pattern: ["T", "E", "?"], answer: "A", icon: "🍵", turkish: "Çay" }
-                ]
-            }
-        },
-        {
-            baseWord: "LOG",
-            changes: {
-                0: [
-                    { pattern: ["?", "O", "G"], answer: "B", icon: "🐸", turkish: "Bataklık" },
-                    { pattern: ["?", "O", "G"], answer: "C", icon: "⚙️", turkish: "Dişli" },
-                    { pattern: ["?", "O", "G"], answer: "D", icon: "🐕", turkish: "Köpek" },
-                    { pattern: ["?", "O", "G"], answer: "F", icon: "🌫️", turkish: "Sis" },
-                    { pattern: ["?", "O", "G"], answer: "H", icon: "🐖", turkish: "Domuz" },
-                    { pattern: ["?", "O", "G"], answer: "J", icon: "🏃", turkish: "Hafif Koşu" }
-                ],
-                1: [
-                    { pattern: ["L", "?", "G"], answer: "A", icon: "⏳", turkish: "Gecikme (Lag)" },
-                    { pattern: ["L", "?", "G"], answer: "E", icon: "🦵", turkish: "Bacak" }
-                ],
-                2: [
-                    { pattern: ["L", "O", "?"], answer: "T", icon: "📦", turkish: "Çok / Parti" },
-                    { pattern: ["L", "O", "?"], answer: "W", icon: "📉", turkish: "Düşük" }
-                ]
-            }
-        },
-        {
-            baseWord: "SUN",
-            changes: {
-                0: [
-                    { pattern: ["?", "U", "N"], answer: "B", icon: "🥯", turkish: "Çörek" },
-                    { pattern: ["?", "U", "N"], answer: "F", icon: "🎉", turkish: "Eğlence" },
-                    { pattern: ["?", "U", "N"], answer: "G", icon: "🔫", turkish: "Silah" },
-                    { pattern: ["?", "U", "N"], answer: "N", icon: "⛪", turkish: "Rahibe" },
-                    { pattern: ["?", "U", "N"], answer: "P", icon: "🎭", turkish: "Kelime Oyunu" },
-                    { pattern: ["?", "U", "N"], answer: "R", icon: "🏃", turkish: "Koşmak" }
-                ],
-                1: [
-                    { pattern: ["S", "?", "N"], answer: "I", icon: "😈", turkish: "Günah" },
-                    { pattern: ["S", "?", "N"], answer: "O", icon: "👦", turkish: "Erkek Evlat" }
-                ],
-                2: [
-                    { pattern: ["S", "U", "?"], answer: "B", icon: "🥪", turkish: "Denizaltı / Sandviç" },
-                    { pattern: ["S", "U", "?"], answer: "M", icon: "➕", turkish: "Toplam" }
-                ]
-            }
-        },
-        {
-            baseWord: "CUT",
-            changes: {
-                0: [
-                    { pattern: ["?", "U", "T"], answer: "B", icon: "🤷", turkish: "Ama / Fakat" },
-                    { pattern: ["?", "U", "T"], answer: "G", icon: "🩻", turkish: "Bağırsak / İçgüdü" },
-                    { pattern: ["?", "U", "T"], answer: "H", icon: "🛖", turkish: "Kulübe" },
-                    { pattern: ["?", "U", "T"], answer: "N", icon: "🥜", turkish: "Kuruyemiş" },
-                    { pattern: ["?", "U", "T"], answer: "R", icon: "🚜", turkish: "Tekerlek İzi / Rutin" }
-                ],
-                1: [
-                    { pattern: ["C", "?", "T"], answer: "A", icon: "🐱", turkish: "Kedi" },
-                    { pattern: ["C", "?", "T"], answer: "O", icon: "🛏️", turkish: "Karyola" }
-                ],
-                2: [
-                    { pattern: ["C", "U", "?"], answer: "B", icon: "🐻", turkish: "Yavru Hayvan" },
-                    { pattern: ["C", "U", "?"], answer: "D", icon: "🐄", turkish: "Geviş Getirmek" },
-                    { pattern: ["C", "U", "?"], answer: "E", icon: "🎱", turkish: "İşaret / Istaka" },
-                    { pattern: ["C", "U", "?"], answer: "P", icon: "☕", turkish: "Fincan / Kupa" }
-                ]
-            }
-        },
-        {
-            baseWord: "RED",
-            changes: {
-                0: [
-                    { pattern: ["?", "E", "D"], answer: "B", icon: "🛏️", turkish: "Yatak" },
-                    { pattern: ["?", "E", "D"], answer: "F", icon: "🍲", turkish: "Beslenmiş" },
-                    { pattern: ["?", "E", "D"], answer: "W", icon: "💍", turkish: "Evlenmek" }
-                ],
-                1: [
-                    { pattern: ["R", "?", "D"], answer: "I", icon: "🗑️", turkish: "Kurtulmak" },
-                    { pattern: ["R", "?", "D"], answer: "O", icon: "🎣", turkish: "Çubuk / Olta" }
-                ],
-                2: [
-                    { pattern: ["R", "E", "?"], answer: "F", icon: "⚽", turkish: "Hakem (Ref)" }
-                ]
+            
+            const spinner = document.getElementById('letterSpinner');
+            isTeleporting = true;
+            spinner.scrollTo({ top: (middleSetStartIndex + 1) * 70 }); 
+            setTimeout(() => { isTeleporting = false; }, 50);
+        }
+
+        function spinByButton(direction) {
+            if (isProcessing) return;
+            const spinner = document.getElementById('letterSpinner');
+            spinner.scrollBy({ top: direction * 70, behavior: 'smooth' });
+        }
+
+        function handleSpin() {
+            if (isProcessing || isTeleporting) return;
+            
+            const feedback = document.getElementById('feedbackMessage');
+            feedback.textContent = "";
+            feedback.className = "feedback";
+            
+            clearTimeout(spinTimeout);
+            clearTimeout(scrollEndTimer);
+
+            spinTimeout = setTimeout(() => { checkAnswer(); }, 2000); 
+            scrollEndTimer = setTimeout(() => { recenterSpinner(); }, 150);
+        }
+
+        function recenterSpinner() {
+            const spinner = document.getElementById('letterSpinner');
+            const letterHeight = 70;
+            let selectedIndex = Math.round(spinner.scrollTop / letterHeight);
+            
+            if (selectedIndex < alphabetLength || selectedIndex > (totalSets - 1) * alphabetLength) {
+                isTeleporting = true;
+                const normalizedIndex = ((selectedIndex % alphabetLength) + alphabetLength) % alphabetLength;
+                const targetIndex = middleSetStartIndex + normalizedIndex;
+                spinner.scrollTo({ top: targetIndex * letterHeight });
+                
+                setTimeout(() => { isTeleporting = false; }, 50);
             }
         }
-    ],
-    
-    // You will add the 4-letter families here later, following the same structure!
-    4: [],
-    5: [],
-    6: []
-};
+
+        function manualCheck() {
+            if (isProcessing) return;
+            clearTimeout(spinTimeout); 
+            checkAnswer();
+        }
+
+        function checkAnswer() {
+            if (isProcessing) return;
+            
+            const spinner = document.getElementById('letterSpinner');
+            const feedback = document.getElementById('feedbackMessage');
+            const level = currentPhaseWords[currentWordIndex];
+
+            const letterHeight = 70;
+            let selectedIndex = Math.round(spinner.scrollTop / letterHeight);
+            
+            const normalizedIndex = ((selectedIndex % alphabetLength) + alphabetLength) % alphabetLength;
+            const selectedLetter = alphabet[normalizedIndex];
+
+            if (selectedLetter === "") { return; }
+
+            if (selectedLetter === level.answer) {
+                isProcessing = true;
+                document.getElementById('checkBtn').disabled = true;
+                score += 10;
+                document.getElementById('score').textContent = score;
+                feedback.textContent = "CORRECT! +10";
+                feedback.className = "feedback correct";
+                
+                document.getElementById('showTurkBtn').style.display = 'none';
+                document.getElementById('turkTranslation').style.display = 'block';
+                document.getElementById('turkTranslation').textContent = level.turkish;
+                
+                const listenBtn = document.getElementById('listenBtn');
+                listenBtn.disabled = true;
+                listenBtn.innerHTML = '🔒 AUDIO LOCKED';
+                listenBtn.style.display = 'none'; 
+                
+                setTimeout(() => {
+                    currentWordIndex++;
+                    // Check if we finished this specific phase
+                    if (currentWordIndex >= currentPhaseWords.length) {
+                        currentPhaseIndex++;
+                        loadPhase(); // This will auto-advance to next phase or next family!
+                    } else {
+                        initLevel();
+                    }
+                }, 2500); 
+
+            } else {
+                feedback.textContent = "NOT QUITE. TRY AGAIN!";
+                feedback.className = "feedback wrong";
+                
+                attemptCount++;
+                if (attemptCount >= 2) {
+                    const listenBtn = document.getElementById('listenBtn');
+                    listenBtn.disabled = false;
+                    listenBtn.innerHTML = '🔊 LISTEN';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
