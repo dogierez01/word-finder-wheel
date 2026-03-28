@@ -76,8 +76,8 @@
             font-size: 20px; font-weight: bold; color: var(--neon-cyan); background: var(--letter-bg); padding: 8px 16px; border-radius: 12px; border: 1px solid var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan-dim);
         }
 
-        .image-clue { font-size: 80px; margin: 15px 0; text-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: popIn 0.5s ease; }
-        .instruction { color: var(--text-muted); font-size: 16px; margin-bottom: 25px; }
+        .image-clue { font-size: 130px; margin: 20px 0; text-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: popIn 0.5s ease; }
+        .instruction { color: var(--neon-cyan); font-size: 20px; font-weight: 600; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
 
         .word-display { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
         
@@ -101,8 +101,9 @@
         .turkish-btn { border: 1px solid var(--warning-yellow); color: var(--warning-yellow); text-shadow: 0 0 5px rgba(255, 234, 0, 0.5); }
         .turkish-btn:hover { background: var(--warning-yellow); color: #000; box-shadow: 0 0 15px var(--warning-yellow); }
         
-        .listen-btn { border: 1px solid var(--audio-purple); color: var(--audio-purple); text-shadow: 0 0 5px rgba(181, 23, 158, 0.5); display: none; animation: popIn 0.3s ease; }
-        .listen-btn:hover { background: var(--audio-purple); color: #fff; box-shadow: 0 0 15px var(--audio-purple); }
+        .listen-btn { border: 1px solid var(--audio-purple); color: var(--audio-purple); text-shadow: 0 0 5px rgba(181, 23, 158, 0.5); animation: popIn 0.3s ease; }
+        .listen-btn:hover:not(:disabled) { background: var(--audio-purple); color: #fff; box-shadow: 0 0 15px var(--audio-purple); }
+        .listen-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; text-shadow: none; box-shadow: none; background: transparent; }
 
         .turkish-translation { display: none; font-size: 22px; font-weight: bold; color: var(--warning-yellow); text-shadow: 0 0 10px var(--warning-yellow); animation: popIn 0.3s ease; }
 
@@ -168,7 +169,7 @@
                 </div>
 
             <div class="tools-area">
-                <button id="listenBtn" class="tool-btn listen-btn" onclick="speakWord()">🔊 LISTEN</button>
+                <button id="listenBtn" class="tool-btn listen-btn" onclick="speakWord()">🔒 AUDIO LOCKED</button>
                 <button id="showTurkBtn" class="tool-btn turkish-btn" onclick="revealTurkish()">🇹🇷 SEE TURKISH</button>
                 <div id="turkTranslation" class="turkish-translation"></div>
             </div>
@@ -239,7 +240,7 @@
                 targetIndex = alphabet.indexOf(key);
             } 
             else if (event.key === "Backspace" || event.key === "Delete" || event.key === "-") {
-                targetIndex = 0; // The REMOVE index
+                targetIndex = 0; 
             }
 
             if (targetIndex !== -1) {
@@ -261,12 +262,10 @@
         function startGame(letterCount) {
             const families = wordDatabase[letterCount];
             
-            // 1. Shuffle the ORDER of the families so they appear differently each time
             let shuffledFamilies = [...families].sort(() => Math.random() - 0.5);
             
             currentGameLevels = [];
             
-            // 2. Shuffle the words INSIDE each family, then add them to the game list
             shuffledFamilies.forEach(family => {
                 let shuffledWords = [...family].sort(() => Math.random() - 0.5);
                 currentGameLevels.push(...shuffledWords);
@@ -302,7 +301,13 @@
             document.getElementById('showTurkBtn').style.display = 'inline-block';
             document.getElementById('turkTranslation').style.display = 'none';
             document.getElementById('turkTranslation').textContent = '';
-            document.getElementById('listenBtn').style.display = 'none'; 
+            
+            // --- UPDATED: ALWAYS VISIBLE, BUT LOCKED! ---
+            const listenBtn = document.getElementById('listenBtn');
+            listenBtn.style.display = 'inline-block';
+            listenBtn.disabled = true;
+            listenBtn.innerHTML = '🔒 AUDIO LOCKED';
+            
             attemptCount = 0; 
         }
 
@@ -451,7 +456,12 @@
                 document.getElementById('showTurkBtn').style.display = 'none';
                 document.getElementById('turkTranslation').style.display = 'block';
                 document.getElementById('turkTranslation').textContent = level.turkish;
-                document.getElementById('listenBtn').style.display = 'none'; 
+                
+                // Keep listen button locked but visible when moving to the next level
+                const listenBtn = document.getElementById('listenBtn');
+                listenBtn.disabled = true;
+                listenBtn.innerHTML = '🔒 AUDIO LOCKED';
+                listenBtn.style.display = 'none'; // Briefly hide it during transition for a clean look
                 
                 setTimeout(() => {
                     currentLevelIndex++;
@@ -464,6 +474,7 @@
                         document.getElementById('checkBtn').style.display = 'none';
                         resetTools();
                         document.getElementById('showTurkBtn').style.display = 'none';
+                        document.getElementById('listenBtn').style.display = 'none';
                         feedback.textContent = "AMAZING JOB!";
                     }
                 }, 2500); 
@@ -472,9 +483,12 @@
                 feedback.textContent = "NOT QUITE. TRY AGAIN!";
                 feedback.className = "feedback wrong";
                 
+                // --- UPDATED: UNLOCK AUDIO UPON 2 ERRORS ---
                 attemptCount++;
-                if (attemptCount >= 3) {
-                    document.getElementById('listenBtn').style.display = 'inline-block';
+                if (attemptCount >= 2) {
+                    const listenBtn = document.getElementById('listenBtn');
+                    listenBtn.disabled = false;
+                    listenBtn.innerHTML = '🔊 LISTEN';
                 }
             }
         }
