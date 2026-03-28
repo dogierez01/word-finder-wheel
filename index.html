@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Spinner: Arcade Edition</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0c; 
+            --container-bg: #15151a;
+            --text-main: #ffffff;
+            --text-muted: #888;
+            --neon-cyan: #00f3ff;
+            --neon-cyan-dim: rgba(0, 243, 255, 0.2);
+            --success-green: #00ff66;
+            --error-red: #ff0055;
+            --letter-bg: #1e1e24;
+            --letter-border: #333;
+            --warning-yellow: #ffea00;
+            --audio-purple: #b5179e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, var(--bg-color) 70%);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .game-container {
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.05);
+            width: 100%;
+            max-width: 550px;
+            border: 1px solid #222;
+        }
+
+        .neon-title {
+            font-size: 42px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 80px var(--neon-cyan);
+            animation: pulse-neon 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-neon {
+            0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
+            100% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-cyan); }
+        }
+
+        #lobbyContainer { display: block; }
+        .lobby-subtitle { color: var(--neon-cyan); margin-bottom: 30px; font-size: 18px; letter-spacing: 1px; }
+        
+        .level-btn {
+            background-color: var(--letter-bg); color: var(--text-main); border: 2px solid #333; padding: 15px 25px; font-size: 20px; font-weight: bold; border-radius: 12px; cursor: pointer; margin: 10px; width: 85%; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .level-btn:not(:disabled):hover { 
+            background-color: var(--neon-cyan-dim); border-color: var(--neon-cyan); color: #fff; box-shadow: 0 0 15px var(--neon-cyan); transform: scale(1.05); 
+        }
+
+        .level-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; background-color: transparent; }
+        .btn-icon { font-size: 24px; }
+
+        #playContainer { display: none; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header h2 { margin: 0; color: #fff; font-size: 24px; text-shadow: 0 0 10px var(--neon-cyan); }
+        
+        .score-board {
+            font-size: 20px; font-weight: bold; color: var(--neon-cyan); background: var(--letter-bg); padding: 8px 16px; border-radius: 12px; border: 1px solid var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan-dim);
+        }
+
+        .image-clue { font-size: 80px; margin: 15px 0; text-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: popIn 0.5s ease; }
+        .instruction { color: var(--text-muted); font-size: 16px; margin-bottom: 25px; }
+
+        .word-display { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+        
+        .static-letter {
+            font-size: 48px; font-weight: bold; text-transform: uppercase; color: #fff; width: 60px; height: 70px; display: flex; justify-content: center; align-items: center; background: var(--letter-bg); border-radius: 8px; border: 2px solid var(--letter-border); box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .spinner-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .spin-btn { background: transparent; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s, text-shadow 0.2s; }
+        .spin-btn:hover { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
+
+        .spinner-container {
+            width: 60px; height: 70px; overflow-y: scroll; scroll-snap-type: y mandatory; border: 3px solid var(--neon-cyan); border-radius: 8px; background: var(--letter-bg); position: relative; box-shadow: 0 0 20px var(--neon-cyan-dim), inset 0 0 15px rgba(0,0,0,0.8); scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .spinner-container::-webkit-scrollbar { display: none; }
+        .spinner-letter { height: 70px; display: flex; justify-content: center; align-items: center; font-size: 44px; font-weight: bold; color: var(--neon-cyan); scroll-snap-align: start; text-shadow: 0 0 5px var(--neon-cyan); }
+
+        .tools-area { margin-top: 15px; display: flex; justify-content: center; gap: 15px; align-items: center; min-height: 40px; }
+        
+        .tool-btn { background: transparent; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; transition: all 0.3s; }
+        .turkish-btn { border: 1px solid var(--warning-yellow); color: var(--warning-yellow); text-shadow: 0 0 5px rgba(255, 234, 0, 0.5); }
+        .turkish-btn:hover { background: var(--warning-yellow); color: #000; box-shadow: 0 0 15px var(--warning-yellow); }
+        
+        .listen-btn { border: 1px solid var(--audio-purple); color: var(--audio-purple); text-shadow: 0 0 5px rgba(181, 23, 158, 0.5); display: none; animation: popIn 0.3s ease; }
+        .listen-btn:hover { background: var(--audio-purple); color: #fff; box-shadow: 0 0 15px var(--audio-purple); }
+
+        .turkish-translation { display: none; font-size: 22px; font-weight: bold; color: var(--warning-yellow); text-shadow: 0 0 10px var(--warning-yellow); animation: popIn 0.3s ease; }
+
+        .controls { margin-top: 25px; }
+        .check-btn {
+            background-color: transparent; color: var(--neon-cyan); border: 2px solid var(--neon-cyan); padding: 12px 30px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .check-btn:hover { background-color: var(--neon-cyan); color: #000; box-shadow: 0 0 20px var(--neon-cyan); }
+        .check-btn:active { transform: scale(0.95); }
+        .check-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; box-shadow: none; background: transparent; }
+
+        .feedback { font-size: 22px; font-weight: bold; height: 30px; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .correct { color: var(--success-green); text-shadow: 0 0 10px var(--success-green); }
+        .wrong { color: var(--error-red); text-shadow: 0 0 10px var(--error-red); }
+
+        .back-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; margin-top: 20px; transition: color 0.2s; }
+        .back-btn:hover { color: #fff; text-shadow: 0 0 5px #fff; }
+
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        
+        <div id="lobbyContainer">
+            <h1 class="lobby-title neon-title">Word Wheel</h1>
+            <p class="lobby-subtitle">SELECT YOUR CHALLENGE</p>
+            
+            <button class="level-btn" onclick="startGame(3)">
+                <span class="btn-icon">🥉</span>
+                3-Letter Words
+                <span class="btn-icon" style="opacity: 0;">🥉</span> 
+            </button>
+            <button class="level-btn" disabled>
+                <span class="btn-icon" style="filter: grayscale(1);">🥈</span>
+                4-Letter Words
+                <span class="btn-icon">🔒</span>
+            </button>
+            <button class="level-btn" disabled>
+                <span class="btn-icon" style="filter: grayscale(1);">🥇</span>
+                5-Letter Words
+                <span class="btn-icon">🔒</span>
+            </button>
+            <button class="level-btn" disabled>
+                <span class="btn-icon" style="filter: grayscale(1);">🏆</span>
+                6-Letter Words
+                <span class="btn-icon">🔒</span>
+            </button>
+        </div>
+
+        <div id="playContainer">
+            <div class="header">
+                <h2>WORD WHEEL</h2>
+                <div class="score-board">PTS: <span id="score">0</span></div>
+            </div>
+
+            <div id="imageClue" class="image-clue">🔤</div>
+            
+            <div id="instruction" class="instruction">Spin the wheel or type a letter!</div>
+
+            <div id="wordDisplay" class="word-display">
+                </div>
+
+            <div class="tools-area">
+                <button id="listenBtn" class="tool-btn listen-btn" onclick="speakWord()">🔊 LISTEN</button>
+                <button id="showTurkBtn" class="tool-btn turkish-btn" onclick="revealTurkish()">🇹🇷 SEE TURKISH</button>
+                <div id="turkTranslation" class="turkish-translation"></div>
+            </div>
+
+            <div class="controls">
+                <button id="checkBtn" class="check-btn" onclick="manualCheck()">Check Answer</button>
+                <div id="feedbackMessage" class="feedback"></div>
+                <button class="back-btn" onclick="returnToLobby()">⬅ Return to Lobby</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="words.js"></script>
+
+    <script>
+        // ADDED THE BLANK SPACE RIGHT BETWEEN "REMOVE" AND "A"
+        const alphabet = ["REMOVE", "", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+        const alphabetLength = alphabet.length; 
+        const totalSets = 7; 
+        const middleSetStartIndex = 3 * alphabetLength; 
+        
+        let currentGameLevels = [];
+        let currentLevelIndex = 0;
+        let score = 0;
+        let spinTimeout = null;
+        let scrollEndTimer = null;
+        let isProcessing = false; 
+        let isTeleporting = false; 
+        let attemptCount = 0; 
+
+        function speakWord() {
+            const level = currentGameLevels[currentLevelIndex];
+            let fullWord = "";
+            for(let char of level.pattern) {
+                if(char === "?") {
+                    if(level.answer !== "REMOVE") fullWord += level.answer;
+                } else {
+                    fullWord += char;
+                }
+            }
+
+            const utterance = new SpeechSynthesisUtterance(fullWord.toLowerCase());
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9; 
+            
+            const voices = window.speechSynthesis.getVoices();
+            const femaleVoice = voices.find(v => v.lang.startsWith('en') && 
+                (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Zira') || v.name.includes('Google US English')));
+            
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        window.speechSynthesis.onvoiceschanged = function() {
+            window.speechSynthesis.getVoices();
+        };
+
+        document.addEventListener('keydown', function(event) {
+            if (document.getElementById('playContainer').style.display === 'none' || isProcessing || isTeleporting) return;
+            
+            const key = event.key.toUpperCase();
+            let targetIndex = -1;
+            
+            if (/^[A-Z]$/.test(key)) {
+                targetIndex = alphabet.indexOf(key);
+            } 
+            else if (event.key === "Backspace" || event.key === "Delete" || event.key === "-") {
+                targetIndex = 0; // The REMOVE index
+            }
+
+            if (targetIndex !== -1) {
+                const spinner = document.getElementById('letterSpinner');
+                const absoluteIndex = middleSetStartIndex + targetIndex;
+                spinner.scrollTo({ top: absoluteIndex * 70, behavior: 'smooth' });
+                
+                const feedback = document.getElementById('feedbackMessage');
+                feedback.textContent = "";
+                feedback.className = "feedback";
+                clearTimeout(spinTimeout);
+                clearTimeout(scrollEndTimer);
+
+                spinTimeout = setTimeout(() => { checkAnswer(); }, 2000); 
+                scrollEndTimer = setTimeout(() => { recenterSpinner(); }, 150);
+            }
+        });
+
+        function startGame(letterCount) {
+            currentGameLevels = wordDatabase[letterCount];
+            
+            // Leaving this shuffle in for right now until we decide which of the 
+            // 3 negotiation plans (Continuous Chain, Sub-Menu, Family Shuffle) you prefer!
+            currentGameLevels.sort(() => Math.random() - 0.5); 
+            
+            currentLevelIndex = 0;
+            score = 0;
+            document.getElementById('score').textContent = score;
+            
+            document.getElementById('lobbyContainer').style.display = 'none';
+            document.getElementById('playContainer').style.display = 'block';
+            
+            initLevel();
+        }
+
+        function returnToLobby() {
+            document.getElementById('lobbyContainer').style.display = 'block';
+            document.getElementById('playContainer').style.display = 'none';
+            clearTimeout(spinTimeout);
+            clearTimeout(scrollEndTimer);
+            window.speechSynthesis.cancel(); 
+        }
+
+        function revealTurkish() {
+            const btn = document.getElementById('showTurkBtn');
+            const translationDiv = document.getElementById('turkTranslation');
+            btn.style.display = 'none';
+            translationDiv.style.display = 'block';
+            translationDiv.textContent = currentGameLevels[currentLevelIndex].turkish;
+        }
+
+        function resetTools() {
+            document.getElementById('showTurkBtn').style.display = 'inline-block';
+            document.getElementById('turkTranslation').style.display = 'none';
+            document.getElementById('turkTranslation').textContent = '';
+            document.getElementById('listenBtn').style.display = 'none'; 
+            attemptCount = 0; 
+        }
+
+        function initLevel() {
+            isProcessing = false;
+            document.getElementById('checkBtn').disabled = false;
+            document.getElementById('instruction').style.display = 'block';
+            document.getElementById('checkBtn').style.display = 'inline-block';
+            
+            resetTools();
+            
+            const level = currentGameLevels[currentLevelIndex];
+            document.getElementById('imageClue').textContent = level.icon;
+            document.getElementById('feedbackMessage').textContent = "";
+            
+            const wordDisplay = document.getElementById('wordDisplay');
+            wordDisplay.innerHTML = ''; 
+
+            for (let i = 0; i < level.pattern.length; i++) {
+                if (level.pattern[i] === "?") {
+                    
+                    const wrapperDiv = document.createElement('div');
+                    wrapperDiv.className = 'spinner-wrapper';
+
+                    const upBtn = document.createElement('button');
+                    upBtn.className = 'spin-btn';
+                    upBtn.innerHTML = '&#9650;'; 
+                    upBtn.onclick = () => spinByButton(-1);
+                    
+                    const spinnerContainer = document.createElement('div');
+                    spinnerContainer.className = 'spinner-container';
+                    spinnerContainer.id = 'letterSpinner';
+                    
+                    for(let set = 0; set < totalSets; set++) {
+                        alphabet.forEach(letter => {
+                            const letterDiv = document.createElement('div');
+                            letterDiv.className = 'spinner-letter';
+                            if (letter === "REMOVE") {
+                                letterDiv.style.color = "var(--error-red)";
+                                letterDiv.style.fontSize = "14px"; 
+                                letterDiv.style.textShadow = "0 0 5px var(--error-red)";
+                            }
+                            letterDiv.textContent = letter;
+                            spinnerContainer.appendChild(letterDiv);
+                        });
+                    }
+
+                    const downBtn = document.createElement('button');
+                    downBtn.className = 'spin-btn';
+                    downBtn.innerHTML = '&#9660;'; 
+                    downBtn.onclick = () => spinByButton(1);
+
+                    spinnerContainer.addEventListener('scroll', handleSpin);
+                    
+                    wrapperDiv.appendChild(upBtn);
+                    wrapperDiv.appendChild(spinnerContainer);
+                    wrapperDiv.appendChild(downBtn);
+                    wordDisplay.appendChild(wrapperDiv);
+
+                } else {
+                    const staticDiv = document.createElement('div');
+                    staticDiv.className = 'static-letter';
+                    staticDiv.textContent = level.pattern[i];
+                    wordDisplay.appendChild(staticDiv);
+                }
+            }
+            
+            const spinner = document.getElementById('letterSpinner');
+            
+            // PREVENT THE SCROLL EVENT FROM TRIGGERING DURING SETUP
+            isTeleporting = true;
+            
+            // SNAP DIRECTLY TO THE BLANK SPACE (Index 1) NO RANDOMNESS!
+            spinner.scrollTo({ top: (middleSetStartIndex + 1) * 70 }); 
+            
+            setTimeout(() => { isTeleporting = false; }, 50);
+        }
+
+        function spinByButton(direction) {
+            if (isProcessing) return;
+            const spinner = document.getElementById('letterSpinner');
+            spinner.scrollBy({ top: direction * 70, behavior: 'smooth' });
+        }
+
+        function handleSpin() {
+            if (isProcessing || isTeleporting) return;
+            
+            const feedback = document.getElementById('feedbackMessage');
+            feedback.textContent = "";
+            feedback.className = "feedback";
+            
+            clearTimeout(spinTimeout);
+            clearTimeout(scrollEndTimer);
+
+            spinTimeout = setTimeout(() => {
+                checkAnswer();
+            }, 2000); 
+
+            scrollEndTimer = setTimeout(() => {
+                recenterSpinner();
+            }, 150);
+        }
+
+        function recenterSpinner() {
+            const spinner = document.getElementById('letterSpinner');
+            const letterHeight = 70;
+            let selectedIndex = Math.round(spinner.scrollTop / letterHeight);
+            
+            if (selectedIndex < alphabetLength || selectedIndex > (totalSets - 1) * alphabetLength) {
+                isTeleporting = true;
+                const normalizedIndex = ((selectedIndex % alphabetLength) + alphabetLength) % alphabetLength;
+                const targetIndex = middleSetStartIndex + normalizedIndex;
+                spinner.scrollTo({ top: targetIndex * letterHeight });
+                
+                setTimeout(() => { isTeleporting = false; }, 50);
+            }
+        }
+
+        function manualCheck() {
+            if (isProcessing) return;
+            clearTimeout(spinTimeout); 
+            checkAnswer();
+        }
+
+        function checkAnswer() {
+            if (isProcessing) return;
+            
+            const spinner = document.getElementById('letterSpinner');
+            const feedback = document.getElementById('feedbackMessage');
+            const level = currentGameLevels[currentLevelIndex];
+
+            const letterHeight = 70;
+            let selectedIndex = Math.round(spinner.scrollTop / letterHeight);
+            
+            const normalizedIndex = ((selectedIndex % alphabetLength) + alphabetLength) % alphabetLength;
+            const selectedLetter = alphabet[normalizedIndex];
+
+            // DO NOTHING IF THEY ARE ON THE BLANK SPACE!
+            if (selectedLetter === "") {
+                return;
+            }
+
+            if (selectedLetter === level.answer) {
+                isProcessing = true;
+                document.getElementById('checkBtn').disabled = true;
+                score += 10;
+                document.getElementById('score').textContent = score;
+                feedback.textContent = "CORRECT! +10";
+                feedback.className = "feedback correct";
+                
+                document.getElementById('showTurkBtn').style.display = 'none';
+                document.getElementById('turkTranslation').style.display = 'block';
+                document.getElementById('turkTranslation').textContent = level.turkish;
+                document.getElementById('listenBtn').style.display = 'none'; 
+                
+                setTimeout(() => {
+                    currentLevelIndex++;
+                    if (currentLevelIndex < currentGameLevels.length) {
+                        initLevel();
+                    } else {
+                        document.getElementById('imageClue').textContent = "🏆";
+                        document.getElementById('wordDisplay').innerHTML = "<h2 style='color: var(--success-green); text-shadow: 0 0 10px var(--success-green);'>LEVEL COMPLETE!</h2>";
+                        document.getElementById('instruction').style.display = 'none';
+                        document.getElementById('checkBtn').style.display = 'none';
+                        resetTools();
+                        document.getElementById('showTurkBtn').style.display = 'none';
+                        feedback.textContent = "AMAZING JOB!";
+                    }
+                }, 2500); 
+
+            } else {
+                feedback.textContent = "NOT QUITE. TRY AGAIN!";
+                feedback.className = "feedback wrong";
+                
+                attemptCount++;
+                if (attemptCount >= 3) {
+                    document.getElementById('listenBtn').style.display = 'inline-block';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
