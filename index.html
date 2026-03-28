@@ -185,7 +185,6 @@
     <script src="words.js"></script>
 
     <script>
-        // ADDED THE BLANK SPACE RIGHT BETWEEN "REMOVE" AND "A"
         const alphabet = ["REMOVE", "", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
         const alphabetLength = alphabet.length; 
         const totalSets = 7; 
@@ -260,11 +259,18 @@
         });
 
         function startGame(letterCount) {
-            currentGameLevels = wordDatabase[letterCount];
+            const families = wordDatabase[letterCount];
             
-            // Leaving this shuffle in for right now until we decide which of the 
-            // 3 negotiation plans (Continuous Chain, Sub-Menu, Family Shuffle) you prefer!
-            currentGameLevels.sort(() => Math.random() - 0.5); 
+            // 1. Shuffle the ORDER of the families so they appear differently each time
+            let shuffledFamilies = [...families].sort(() => Math.random() - 0.5);
+            
+            currentGameLevels = [];
+            
+            // 2. Shuffle the words INSIDE each family, then add them to the game list
+            shuffledFamilies.forEach(family => {
+                let shuffledWords = [...family].sort(() => Math.random() - 0.5);
+                currentGameLevels.push(...shuffledWords);
+            });
             
             currentLevelIndex = 0;
             score = 0;
@@ -366,12 +372,8 @@
             
             const spinner = document.getElementById('letterSpinner');
             
-            // PREVENT THE SCROLL EVENT FROM TRIGGERING DURING SETUP
             isTeleporting = true;
-            
-            // SNAP DIRECTLY TO THE BLANK SPACE (Index 1) NO RANDOMNESS!
             spinner.scrollTo({ top: (middleSetStartIndex + 1) * 70 }); 
-            
             setTimeout(() => { isTeleporting = false; }, 50);
         }
 
@@ -434,7 +436,6 @@
             const normalizedIndex = ((selectedIndex % alphabetLength) + alphabetLength) % alphabetLength;
             const selectedLetter = alphabet[normalizedIndex];
 
-            // DO NOTHING IF THEY ARE ON THE BLANK SPACE!
             if (selectedLetter === "") {
                 return;
             }
