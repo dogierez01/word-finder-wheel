@@ -69,35 +69,18 @@
         .level-btn:disabled { border-color: var(--letter-border); color: #555; cursor: not-allowed; background-color: transparent; }
         .btn-icon { font-size: 24px; }
 
-        /* --- NEW: SET SELECTION SUB-MENU --- */
+        /* --- SET SELECTION SUB-MENU --- */
         #setSelectionContainer { display: none; }
         .set-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 10px;
-            /* Hide scrollbar for clean look */
-            scrollbar-width: none; 
-            -ms-overflow-style: none;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 25px; max-height: 400px; overflow-y: auto; padding: 10px; scrollbar-width: none; -ms-overflow-style: none;
         }
         .set-grid::-webkit-scrollbar { display: none; }
         
         .set-btn {
-            width: calc(50% - 15px); /* Two columns */
-            margin: 0;
-            padding: 15px 10px;
-            font-size: 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
+            width: calc(50% - 15px); margin: 0; padding: 15px 10px; font-size: 18px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
         }
-        .set-base-word { color: var(--warning-yellow); font-size: 16px; font-weight: bold; letter-spacing: 2px; }
+        .set-base-word { color: var(--warning-yellow); font-size: 16px; font-weight: bold; letter-spacing: 1px; text-align: center; line-height: 1.2; }
+        .set-turkish-hint { color: var(--text-muted); font-size: 14px; font-weight: normal; }
 
         /* --- GAME AREA STYLES --- */
         #playContainer { display: none; }
@@ -112,7 +95,9 @@
             background: rgba(0, 243, 255, 0.05); border: 1px solid var(--neon-cyan); border-radius: 12px; padding: 10px 20px; margin: 15px auto; display: inline-block; box-shadow: 0 0 15px var(--neon-cyan-dim);
         }
         .base-word-label { color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
-        .base-word-text { font-size: 36px; font-weight: bold; color: var(--warning-yellow); letter-spacing: 8px; text-shadow: 0 0 15px rgba(255, 234, 0, 0.5); }
+        .base-word-text { font-size: 36px; font-weight: bold; color: var(--warning-yellow); letter-spacing: 4px; text-shadow: 0 0 15px rgba(255, 234, 0, 0.5); }
+        .base-word-turkish-hud { font-size: 20px; color: var(--text-muted); letter-spacing: 1px; text-shadow: none; font-weight: normal; }
+        
         .phase-instruction { color: var(--success-green); font-size: 20px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
 
         .image-clue { font-size: 110px; margin: 15px 0; text-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: popIn 0.5s ease; }
@@ -254,7 +239,7 @@
         const totalSets = 7; 
         const middleSetStartIndex = 3 * alphabetLength; 
         
-        let currentActiveLetterCount = 3; // Remembers if we are playing 3, 4, or 5 letter words
+        let currentActiveLetterCount = 3; 
         let currentFamily = null;
         let currentPhaseIndex = 0; 
         let currentPhaseWords = []; 
@@ -324,9 +309,8 @@
             }
         });
 
-        // --- NEW MENU NAVIGATION FLOW ---
+        // --- MENU NAVIGATION FLOW ---
         
-        // 1. Open the Sub-Menu
         function openSetMenu(letterCount) {
             currentActiveLetterCount = letterCount;
             document.getElementById('lobbyContainer').style.display = 'none';
@@ -334,27 +318,26 @@
             document.getElementById('setMenuTitle').textContent = `${letterCount}-LETTER SETS`;
 
             const grid = document.getElementById('setButtonsGrid');
-            grid.innerHTML = ''; // Clear old buttons
+            grid.innerHTML = ''; 
             
             const families = wordDatabase[letterCount];
             
             families.forEach((family, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'level-btn set-btn';
-                btn.innerHTML = `SET ${index + 1} <span class="set-base-word">(${family.baseWord})</span>`;
+                // INCORPORATED THE BRACKETS WITH THE TURKISH BASE MEANING HERE
+                btn.innerHTML = `SET ${index + 1} <br><span class="set-base-word">${family.baseWord} <span class="set-turkish-hint">[${family.baseTurkish}]</span></span>`;
                 btn.onclick = () => startSpecificSet(index);
                 grid.appendChild(btn);
             });
         }
 
-        // 2. Return to Main Menu
         function returnToMainLobby() {
             document.getElementById('setSelectionContainer').style.display = 'none';
             document.getElementById('lobbyContainer').style.display = 'block';
             window.speechSynthesis.cancel();
         }
 
-        // 3. Return to Set Menu (from the game)
         function returnToSetMenu() {
             document.getElementById('playContainer').style.display = 'none';
             document.getElementById('setSelectionContainer').style.display = 'block';
@@ -364,7 +347,6 @@
             window.speechSynthesis.cancel();
         }
 
-        // 4. Start the specific Set
         function startSpecificSet(familyIndex) {
             currentFamily = wordDatabase[currentActiveLetterCount][familyIndex];
             currentPhaseIndex = 0;
@@ -374,7 +356,8 @@
             document.getElementById('setSelectionContainer').style.display = 'none';
             document.getElementById('playContainer').style.display = 'block';
 
-            document.getElementById('baseWordDisplay').textContent = currentFamily.baseWord;
+            // INCORPORATED THE BRACKETS WITH THE TURKISH BASE MEANING INTO THE HUD
+            document.getElementById('baseWordDisplay').innerHTML = `${currentFamily.baseWord} <span class="base-word-turkish-hud">[${currentFamily.baseTurkish}]</span>`;
             document.getElementById('baseWordArea').style.display = 'inline-block';
             document.getElementById('returnSetsBtn').style.display = 'block'; 
 
@@ -398,7 +381,6 @@
                 currentPhaseIndex++;
             }
             
-            // --- NEW: SET COMPLETE VICTORY STATE ---
             document.getElementById('imageClue').textContent = "🏆";
             document.getElementById('wordDisplay').innerHTML = "<h2 style='color: var(--success-green); text-shadow: 0 0 10px var(--success-green);'>SET COMPLETE!</h2>";
             document.getElementById('phaseInstruction').style.display = 'none';
