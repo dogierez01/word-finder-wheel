@@ -166,16 +166,18 @@
                 3-Letter Words
                 <span class="btn-icon" style="opacity: 0;">🥉</span> 
             </button>
-            <button class="level-btn" disabled>
-                <span class="btn-icon" style="filter: grayscale(1);">🥈</span>
+            
+            <button class="level-btn" onclick="openSetMenu(4)">
+                <span class="btn-icon">🥈</span>
                 4-Letter Words
-                <span class="btn-icon">🔒</span>
+                <span class="btn-icon" style="opacity: 0;">🥈</span>
             </button>
-            <button class="level-btn" disabled>
-                <span class="btn-icon" style="filter: grayscale(1);">🥇</span>
+            <button class="level-btn" onclick="openSetMenu(5)">
+                <span class="btn-icon">🥇</span>
                 5-Letter Words
-                <span class="btn-icon">🔒</span>
+                <span class="btn-icon" style="opacity: 0;">🥇</span>
             </button>
+            
             <button class="level-btn" disabled>
                 <span class="btn-icon" style="filter: grayscale(1);">🏆</span>
                 6-Letter Words
@@ -184,7 +186,7 @@
         </div>
 
         <div id="setSelectionContainer">
-            <h1 class="lobby-title neon-title" id="setMenuTitle">3-LETTER SETS</h1>
+            <h1 class="lobby-title neon-title" id="setMenuTitle">SETS</h1>
             <p class="lobby-subtitle">CHOOSE YOUR FAMILY</p>
             
             <div id="setButtonsGrid" class="set-grid">
@@ -356,12 +358,20 @@
         }
 
         function loadPhase() {
-            while(currentPhaseIndex <= 2) {
+            // Updated to handle up to 6 letters
+            while(currentPhaseIndex <= 5) {
                 if (currentFamily.changes[currentPhaseIndex] && currentFamily.changes[currentPhaseIndex].length > 0) {
                     currentPhaseWords = [...currentFamily.changes[currentPhaseIndex]].sort(() => Math.random() - 0.5);
                     currentWordIndex = 0;
 
-                    const phaseTexts = ["Change the 1st letter!", "Change the 2nd letter!", "Change the 3rd letter!"];
+                    const phaseTexts = [
+                        "Change the 1st letter!", 
+                        "Change the 2nd letter!", 
+                        "Change the 3rd letter!",
+                        "Change the 4th letter!",
+                        "Change the 5th letter!",
+                        "Change the 6th letter!"
+                    ];
                     document.getElementById('phaseInstruction').textContent = phaseTexts[currentPhaseIndex];
                     document.getElementById('phaseInstruction').style.display = 'block';
 
@@ -375,7 +385,7 @@
             document.getElementById('wordDisplay').innerHTML = "<h2 style='color: var(--success-green); text-shadow: 0 0 10px var(--success-green);'>SET COMPLETE!</h2>";
             document.getElementById('phaseInstruction').style.display = 'none';
             document.getElementById('checkBtn').style.display = 'none';
-            document.getElementById('listenBtn').style.display = 'none'; // Only hidden when the set is 100% over
+            document.getElementById('listenBtn').style.display = 'none'; 
             document.getElementById('showTurkBtn').style.display = 'none';
             document.getElementById('nextWordBtn').style.display = 'none';
             
@@ -394,7 +404,6 @@
             document.getElementById('turkTranslation').style.display = 'none';
             document.getElementById('turkTranslation').textContent = '';
             
-            // Audio button is permanently anchored and active during all gameplay
             const listenBtn = document.getElementById('listenBtn');
             listenBtn.style.display = 'inline-block';
             listenBtn.disabled = false;
@@ -551,8 +560,6 @@
                 document.getElementById('turkTranslation').style.display = 'block';
                 document.getElementById('turkTranslation').textContent = level.turkish;
                 
-                // Audio stays active during the success pause!
-                
                 setTimeout(() => { advanceToNextWord(); }, 2000); 
 
             } else {
@@ -563,8 +570,6 @@
                 } else {
                     isLevelLocked = true; 
                     document.getElementById('checkBtn').style.display = 'none';
-                    
-                    // Audio stays active during the Strike 3 pause!
                     
                     feedback.textContent = "OUT OF TRIES!";
                     feedback.className = "feedback wrong";
