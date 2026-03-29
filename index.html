@@ -127,7 +127,7 @@
 
         .turkish-translation { display: none; font-size: 22px; font-weight: bold; color: var(--warning-yellow); text-shadow: 0 0 10px var(--warning-yellow); animation: popIn 0.3s ease; }
 
-        .controls { margin-top: 25px; }
+        .controls { margin-top: 25px; margin-bottom: 20px; }
         .check-btn {
             background-color: transparent; color: var(--neon-cyan); border: 2px solid var(--neon-cyan); padding: 12px 30px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
         }
@@ -147,6 +147,19 @@
         .correct { color: var(--success-green); text-shadow: 0 0 10px var(--success-green); }
         .wrong { color: var(--error-red); text-shadow: 0 0 10px var(--error-red); }
 
+        /* --- NEW: VIRTUAL KEYBOARD STYLES --- */
+        .keyboard-area {
+            margin-top: 20px; display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 550px; margin-left: auto; margin-right: auto;
+        }
+        .kb-row { display: flex; justify-content: center; gap: 6px; }
+        .kb-key {
+            background-color: var(--letter-bg); color: var(--text-main); border: 1px solid var(--letter-border); border-radius: 6px; padding: 12px 0; font-size: 16px; font-weight: bold; cursor: pointer; flex: 1; transition: all 0.2s; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .kb-key:hover { background-color: var(--neon-cyan-dim); border-color: var(--neon-cyan); color: #fff; text-shadow: 0 0 5px var(--neon-cyan); }
+        .kb-key:active { transform: scale(0.95); }
+        .kb-wide { flex: 1.5; font-size: 14px; background-color: rgba(255, 0, 85, 0.1); border-color: var(--error-red); color: var(--error-red); }
+        .kb-wide:hover { background-color: var(--error-red); color: #fff; text-shadow: none; box-shadow: 0 0 10px var(--error-red); }
+
         .back-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; margin-top: 20px; transition: color 0.2s; display: block; width: 100%; }
         .back-btn:hover { color: #fff; text-shadow: 0 0 5px #fff; }
 
@@ -161,29 +174,17 @@
             <h1 class="lobby-title neon-title">Word Wheel</h1>
             <p class="lobby-subtitle">SELECT YOUR CHALLENGE</p>
             
-            <button class="level-btn" onclick="openSetMenu(3)">
-                <span class="btn-icon">🥉</span> 3-Letter Words <span class="btn-icon" style="opacity: 0;">🥉</span> 
-            </button>
-            <button class="level-btn" onclick="openSetMenu(4)">
-                <span class="btn-icon">🥈</span> 4-Letter Words <span class="btn-icon" style="opacity: 0;">🥈</span>
-            </button>
-            <button class="level-btn" onclick="openSetMenu(5)">
-                <span class="btn-icon">🥇</span> 5-Letter Words <span class="btn-icon" style="opacity: 0;">🥇</span>
-            </button>
-            <button class="level-btn" onclick="openSetMenu(6)">
-                <span class="btn-icon">💎</span> 6-Letter Words <span class="btn-icon" style="opacity: 0;">💎</span>
-            </button>
-            <button class="level-btn" onclick="openSetMenu(7)">
-                <span class="btn-icon">👑</span> 7-Letter Words <span class="btn-icon" style="opacity: 0;">👑</span>
-            </button>
+            <button class="level-btn" onclick="openSetMenu(3)"><span class="btn-icon">🥉</span> 3-Letter Words <span class="btn-icon" style="opacity: 0;">🥉</span></button>
+            <button class="level-btn" onclick="openSetMenu(4)"><span class="btn-icon">🥈</span> 4-Letter Words <span class="btn-icon" style="opacity: 0;">🥈</span></button>
+            <button class="level-btn" onclick="openSetMenu(5)"><span class="btn-icon">🥇</span> 5-Letter Words <span class="btn-icon" style="opacity: 0;">🥇</span></button>
+            <button class="level-btn" onclick="openSetMenu(6)"><span class="btn-icon">💎</span> 6-Letter Words <span class="btn-icon" style="opacity: 0;">💎</span></button>
+            <button class="level-btn" onclick="openSetMenu(7)"><span class="btn-icon">👑</span> 7-Letter Words <span class="btn-icon" style="opacity: 0;">👑</span></button>
         </div>
 
         <div id="setSelectionContainer">
             <h1 class="lobby-title neon-title" id="setMenuTitle">SETS</h1>
             <p class="lobby-subtitle">CHOOSE YOUR FAMILY</p>
-            
             <div id="setButtonsGrid" class="set-grid"></div>
-
             <button class="back-btn" onclick="returnToMainLobby()">⬅ Return to Main Menu</button>
         </div>
 
@@ -213,10 +214,46 @@
             <div class="controls">
                 <button id="checkBtn" class="check-btn" onclick="manualCheck()">Check Answer</button>
                 <button id="nextWordBtn" class="flashy-next-btn" onclick="skipToNextWord()">⏭️ NEXT WORD</button>
-                
                 <div id="feedbackMessage" class="feedback"></div>
-                <button id="returnSetsBtn" class="back-btn" onclick="returnToSetMenu()">⬅ Return to Sets</button>
             </div>
+
+            <div id="virtualKeyboard" class="keyboard-area">
+                <div class="kb-row">
+                    <button class="kb-key" onclick="handleVirtualKey('Q')">Q</button>
+                    <button class="kb-key" onclick="handleVirtualKey('W')">W</button>
+                    <button class="kb-key" onclick="handleVirtualKey('E')">E</button>
+                    <button class="kb-key" onclick="handleVirtualKey('R')">R</button>
+                    <button class="kb-key" onclick="handleVirtualKey('T')">T</button>
+                    <button class="kb-key" onclick="handleVirtualKey('Y')">Y</button>
+                    <button class="kb-key" onclick="handleVirtualKey('U')">U</button>
+                    <button class="kb-key" onclick="handleVirtualKey('I')">I</button>
+                    <button class="kb-key" onclick="handleVirtualKey('O')">O</button>
+                    <button class="kb-key" onclick="handleVirtualKey('P')">P</button>
+                </div>
+                <div class="kb-row" style="padding: 0 5%;">
+                    <button class="kb-key" onclick="handleVirtualKey('A')">A</button>
+                    <button class="kb-key" onclick="handleVirtualKey('S')">S</button>
+                    <button class="kb-key" onclick="handleVirtualKey('D')">D</button>
+                    <button class="kb-key" onclick="handleVirtualKey('F')">F</button>
+                    <button class="kb-key" onclick="handleVirtualKey('G')">G</button>
+                    <button class="kb-key" onclick="handleVirtualKey('H')">H</button>
+                    <button class="kb-key" onclick="handleVirtualKey('J')">J</button>
+                    <button class="kb-key" onclick="handleVirtualKey('K')">K</button>
+                    <button class="kb-key" onclick="handleVirtualKey('L')">L</button>
+                </div>
+                <div class="kb-row">
+                    <button class="kb-key kb-wide" onclick="handleVirtualKey('REMOVE')">⌫ DEL</button>
+                    <button class="kb-key" onclick="handleVirtualKey('Z')">Z</button>
+                    <button class="kb-key" onclick="handleVirtualKey('X')">X</button>
+                    <button class="kb-key" onclick="handleVirtualKey('C')">C</button>
+                    <button class="kb-key" onclick="handleVirtualKey('V')">V</button>
+                    <button class="kb-key" onclick="handleVirtualKey('B')">B</button>
+                    <button class="kb-key" onclick="handleVirtualKey('N')">N</button>
+                    <button class="kb-key" onclick="handleVirtualKey('M')">M</button>
+                </div>
+            </div>
+
+            <button id="returnSetsBtn" class="back-btn" onclick="returnToSetMenu()">⬅ Return to Sets</button>
         </div>
 
     </div>
@@ -282,20 +319,34 @@
             else if (event.key === "Backspace" || event.key === "Delete" || event.key === "-") { targetIndex = 0; }
 
             if (targetIndex !== -1) {
-                const spinner = document.getElementById('letterSpinner');
-                const absoluteIndex = middleSetStartIndex + targetIndex;
-                spinner.scrollTo({ top: absoluteIndex * 65, behavior: 'smooth' });
-                
-                const feedback = document.getElementById('feedbackMessage');
-                feedback.textContent = "";
-                feedback.className = "feedback";
-                clearTimeout(spinTimeout);
-                clearTimeout(scrollEndTimer);
-
-                spinTimeout = setTimeout(() => { checkAnswer(); }, 2000); 
-                scrollEndTimer = setTimeout(() => { recenterSpinner(); }, 150);
+                triggerSpinToTarget(targetIndex);
             }
         });
+
+        // --- NEW: VIRTUAL KEYBOARD HANDLER ---
+        function handleVirtualKey(key) {
+            if (document.getElementById('playContainer').style.display === 'none' || isProcessing || isTeleporting || isLevelLocked) return;
+            let targetIndex = alphabet.indexOf(key);
+            if (targetIndex !== -1) {
+                triggerSpinToTarget(targetIndex);
+            }
+        }
+
+        // Reusable spin function for both physical and virtual keyboards
+        function triggerSpinToTarget(targetIndex) {
+            const spinner = document.getElementById('letterSpinner');
+            const absoluteIndex = middleSetStartIndex + targetIndex;
+            spinner.scrollTo({ top: absoluteIndex * 65, behavior: 'smooth' });
+            
+            const feedback = document.getElementById('feedbackMessage');
+            feedback.textContent = "";
+            feedback.className = "feedback";
+            clearTimeout(spinTimeout);
+            clearTimeout(scrollEndTimer);
+
+            spinTimeout = setTimeout(() => { checkAnswer(); }, 2000); 
+            scrollEndTimer = setTimeout(() => { recenterSpinner(); }, 150);
+        }
 
         function openSetMenu(letterCount) {
             currentActiveLetterCount = letterCount;
@@ -349,7 +400,7 @@
         }
 
         function loadPhase() {
-            while(currentPhaseIndex <= 6) { // Expanded to 7 letters
+            while(currentPhaseIndex <= 6) { 
                 if (currentFamily.changes[currentPhaseIndex] && currentFamily.changes[currentPhaseIndex].length > 0) {
                     currentPhaseWords = [...currentFamily.changes[currentPhaseIndex]].sort(() => Math.random() - 0.5);
                     currentWordIndex = 0;
