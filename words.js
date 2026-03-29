@@ -1,13 +1,12 @@
-// words.js - The Complete Master Database (3, 4, and 5 Letter Families)
+// words.js - The Complete Master Database (3 to 7 Letter Families)
 
 const wordDatabase = {
     // ==========================================
-    // 3-LETTER FAMILIES
+    // 3-LETTER FAMILIES 
     // ==========================================
     3: [
         {
-            baseWord: "BAT",
-            baseTurkish: "Yarasa / Sopa",
+            baseWord: "BAT", baseTurkish: "Yarasa / Sopa",
             changes: {
                 0: [ 
                     { pattern: ["?", "A", "T"], answer: "C", icon: "🐈", turkish: "Kedi" },
@@ -18,9 +17,7 @@ const wordDatabase = {
                     { pattern: ["?", "A", "T"], answer: "R", icon: "🐀", turkish: "Fare" },
                     { pattern: ["?", "A", "T"], answer: "V", icon: "🛢️", turkish: "Fıçı" }
                 ],
-                1: [ 
-                    { pattern: ["B", "?", "T"], answer: "U", icon: "🤔", turkish: "Ama / Fakat" }
-                ],
+                1: [ { pattern: ["B", "?", "T"], answer: "U", icon: "🤔", turkish: "Ama / Fakat" } ],
                 2: [ 
                     { pattern: ["B", "A", "?"], answer: "D", icon: "👎", turkish: "Kötü" },
                     { pattern: ["B", "A", "?"], answer: "G", icon: "👜", turkish: "Çanta" },
@@ -30,8 +27,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "PAN",
-            baseTurkish: "Tava",
+            baseWord: "PAN", baseTurkish: "Tava",
             changes: {
                 0: [
                     { pattern: ["?", "A", "N"], answer: "B", icon: "🛑", turkish: "Yasaklamak" },
@@ -56,8 +52,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "POT",
-            baseTurkish: "Tencere / Demlik",
+            baseWord: "POT", baseTurkish: "Tencere / Demlik",
             changes: {
                 0: [
                     { pattern: ["?", "O", "T"], answer: "C", icon: "🛏️", turkish: "Karyola" },
@@ -79,8 +74,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "BUG",
-            baseTurkish: "Böcek",
+            baseWord: "BUG", baseTurkish: "Böcek",
             changes: {
                 0: [
                     { pattern: ["?", "U", "G"], answer: "H", icon: "🫂", turkish: "Sarılmak" },
@@ -107,8 +101,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "TIP",
-            baseTurkish: "Uç / İpucu / Bahşiş",
+            baseWord: "TIP", baseTurkish: "Uç / İpucu / Bahşiş",
             changes: {
                 0: [
                     { pattern: ["?", "I", "P"], answer: "D", icon: "🥣", turkish: "Daldırmak" },
@@ -130,8 +123,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "NET",
-            baseTurkish: "Ağ",
+            baseWord: "NET", baseTurkish: "Ağ",
             changes: {
                 0: [
                     { pattern: ["?", "E", "T"], answer: "B", icon: "🎰", turkish: "Bahis" },
@@ -142,17 +134,12 @@ const wordDatabase = {
                     { pattern: ["?", "E", "T"], answer: "S", icon: "⚙️", turkish: "Ayarlamak / Takım" },
                     { pattern: ["?", "E", "T"], answer: "V", icon: "🩺", turkish: "Hayvan Doktoru" }
                 ],
-                1: [
-                    { pattern: ["N", "?", "T"], answer: "U", icon: "🥜", turkish: "Kuruyemiş" }
-                ],
-                2: [
-                    { pattern: ["N", "E", "?"], answer: "W", icon: "✨", turkish: "Yeni" }
-                ]
+                1: [ { pattern: ["N", "?", "T"], answer: "U", icon: "🥜", turkish: "Kuruyemiş" } ],
+                2: [ { pattern: ["N", "E", "?"], answer: "W", icon: "✨", turkish: "Yeni" } ]
             }
         },
         {
-            baseWord: "FIN",
-            baseTurkish: "Yüzgeç",
+            baseWord: "FIN", baseTurkish: "Yüzgeç",
             changes: {
                 0: [
                     { pattern: ["?", "I", "N"], answer: "B", icon: "🗑️", turkish: "Kutu / Çöp Kutusu" },
@@ -174,8 +161,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "CAP",
-            baseTurkish: "Kasket / Kapak",
+            baseWord: "CAP", baseTurkish: "Kasket / Kapak",
             changes: {
                 0: [
                     { pattern: ["?", "A", "P"], answer: "G", icon: "🌉", turkish: "Boşluk / Uçurum" },
@@ -202,8 +188,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "HOP",
-            baseTurkish: "Sıçramak",
+            baseWord: "HOP", baseTurkish: "Sıçramak",
             changes: {
                 0: [
                     { pattern: ["?", "O", "P"], answer: "C", icon: "👮", turkish: "Polis" },
@@ -211,9 +196,7 @@ const wordDatabase = {
                     { pattern: ["?", "O", "P"], answer: "P", icon: "💥", turkish: "Patlamak" },
                     { pattern: ["?", "O", "P"], answer: "T", icon: "🔝", turkish: "Üst" }
                 ],
-                1: [
-                    { pattern: ["H", "?", "P"], answer: "I", icon: "🦴", turkish: "Kalça" }
-                ],
+                1: [ { pattern: ["H", "?", "P"], answer: "I", icon: "🦴", turkish: "Kalça" } ],
                 2: [
                     { pattern: ["H", "O", "?"], answer: "G", icon: "🐖", turkish: "Domuz" },
                     { pattern: ["H", "O", "?"], answer: "T", icon: "🥵", turkish: "Sıcak" },
@@ -222,8 +205,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "MAD",
-            baseTurkish: "Kızgın / Deli",
+            baseWord: "MAD", baseTurkish: "Kızgın / Deli",
             changes: {
                 0: [
                     { pattern: ["?", "A", "D"], answer: "B", icon: "👎", turkish: "Kötü" },
@@ -232,9 +214,7 @@ const wordDatabase = {
                     { pattern: ["?", "A", "D"], answer: "P", icon: "📝", turkish: "Bloknot / Altlık" },
                     { pattern: ["?", "A", "D"], answer: "S", icon: "😢", turkish: "Üzgün" }
                 ],
-                1: [
-                    { pattern: ["M", "?", "D"], answer: "U", icon: "💩", turkish: "Çamur" }
-                ],
+                1: [ { pattern: ["M", "?", "D"], answer: "U", icon: "💩", turkish: "Çamur" } ],
                 2: [
                     { pattern: ["M", "A", "?"], answer: "C", icon: "🧥", turkish: "Yağmurluk" },
                     { pattern: ["M", "A", "?"], answer: "N", icon: "👨", turkish: "Adam" },
@@ -245,8 +225,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "TEN",
-            baseTurkish: "On",
+            baseWord: "TEN", baseTurkish: "On",
             changes: {
                 0: [
                     { pattern: ["?", "E", "N"], answer: "D", icon: "🐻", turkish: "İn / Mağara" },
@@ -259,14 +238,11 @@ const wordDatabase = {
                     { pattern: ["T", "?", "N"], answer: "I", icon: "🥫", turkish: "Teneke" },
                     { pattern: ["T", "?", "N"], answer: "O", icon: "🐘", turkish: "Ağırlık Birimi (1000 kg)" }
                 ],
-                2: [
-                    { pattern: ["T", "E", "?"], answer: "A", icon: "🍵", turkish: "Çay" }
-                ]
+                2: [ { pattern: ["T", "E", "?"], answer: "A", icon: "🍵", turkish: "Çay" } ]
             }
         },
         {
-            baseWord: "LOG",
-            baseTurkish: "Kütük / Tomruk",
+            baseWord: "LOG", baseTurkish: "Kütük / Tomruk",
             changes: {
                 0: [
                     { pattern: ["?", "O", "G"], answer: "B", icon: "🐸", turkish: "Bataklık" },
@@ -287,8 +263,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "SUN",
-            baseTurkish: "Güneş",
+            baseWord: "SUN", baseTurkish: "Güneş",
             changes: {
                 0: [
                     { pattern: ["?", "U", "N"], answer: "B", icon: "🥯", turkish: "Çörek" },
@@ -309,8 +284,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "CUT",
-            baseTurkish: "Kesmek",
+            baseWord: "CUT", baseTurkish: "Kesmek",
             changes: {
                 0: [
                     { pattern: ["?", "U", "T"], answer: "B", icon: "🤷", turkish: "Ama / Fakat" },
@@ -332,8 +306,7 @@ const wordDatabase = {
             }
         },
         {
-            baseWord: "RED",
-            baseTurkish: "Kırmızı",
+            baseWord: "RED", baseTurkish: "Kırmızı",
             changes: {
                 0: [
                     { pattern: ["?", "E", "D"], answer: "B", icon: "🛏️", turkish: "Yatak" },
@@ -344,458 +317,458 @@ const wordDatabase = {
                     { pattern: ["R", "?", "D"], answer: "I", icon: "🗑️", turkish: "Kurtulmak" },
                     { pattern: ["R", "?", "D"], answer: "O", icon: "🎣", turkish: "Çubuk / Olta" }
                 ],
-                2: [
-                    { pattern: ["R", "E", "?"], answer: "F", icon: "⚽", turkish: "Hakem" }
-                ]
+                2: [ { pattern: ["R", "E", "?"], answer: "F", icon: "⚽", turkish: "Hakem" } ]
             }
         }
     ],
-    
+
     // ==========================================
-    // 4-LETTER FAMILIES
+    // 4-LETTER FAMILIES 
     // ==========================================
     4: [
         {
-            baseWord: "CARE",
-            baseTurkish: "Önemsemek / Bakım",
+            baseWord: "BEAR", baseTurkish: "Ayı",
             changes: {
                 0: [ 
-                    { pattern: ["?", "A", "R", "E"], answer: "B", icon: "🏜️", turkish: "Çıplak / Boş" },
-                    { pattern: ["?", "A", "R", "E"], answer: "D", icon: "🤠", turkish: "Cesaret Etmek" },
-                    { pattern: ["?", "A", "R", "E"], answer: "F", icon: "🎫", turkish: "Bilet Ücreti" },
-                    { pattern: ["?", "A", "R", "E"], answer: "H", icon: "🐇", turkish: "Yabani Tavşan" },
-                    { pattern: ["?", "A", "R", "E"], answer: "M", icon: "🐴", turkish: "Kısrak" },
-                    { pattern: ["?", "A", "R", "E"], answer: "R", icon: "🥩", turkish: "Nadir / Az Pişmiş" }
+                    { pattern: ["?", "E", "A", "R"], answer: "D", icon: "💌", turkish: "Sevgili" },
+                    { pattern: ["?", "E", "A", "R"], answer: "F", icon: "😨", turkish: "Korku" },
+                    { pattern: ["?", "E", "A", "R"], answer: "G", icon: "⚙️", turkish: "Dişli" },
+                    { pattern: ["?", "E", "A", "R"], answer: "H", icon: "👂", turkish: "Duymak" },
+                    { pattern: ["?", "E", "A", "R"], answer: "N", icon: "📍", turkish: "Yakın" },
+                    { pattern: ["?", "E", "A", "R"], answer: "P", icon: "🍐", turkish: "Armut" },
+                    { pattern: ["?", "E", "A", "R"], answer: "R", icon: "🔙", turkish: "Arka" },
+                    { pattern: ["?", "E", "A", "R"], answer: "T", icon: "💧", turkish: "Gözyaşı" },
+                    { pattern: ["?", "E", "A", "R"], answer: "W", icon: "👕", turkish: "Giyinmek" }
                 ],
                 1: [ 
-                    { pattern: ["C", "?", "R", "E"], answer: "O", icon: "🍎", turkish: "Çekirdek / Öz" },
-                    { pattern: ["C", "?", "R", "E"], answer: "U", icon: "💊", turkish: "Tedavi" }
+                    { pattern: ["B", "?", "A", "R"], answer: "O", icon: "🐗", turkish: "Yaban Domuzu" },
+                    { pattern: ["B", "?", "A", "R"], answer: "REMOVE", icon: "🍫", turkish: "Çubuk / Tezgah" }
                 ],
-                2: [ 
-                    { pattern: ["C", "A", "?", "E"], answer: "F", icon: "☕", turkish: "Kahveci" },
-                    { pattern: ["C", "A", "?", "E"], answer: "G", icon: "🦜", turkish: "Kafes" },
-                    { pattern: ["C", "A", "?", "E"], answer: "K", icon: "🍰", turkish: "Pasta" },
-                    { pattern: ["C", "A", "?", "E"], answer: "N", icon: "🦯", turkish: "Baston" },
-                    { pattern: ["C", "A", "?", "E"], answer: "P", icon: "🦸", turkish: "Pelerin" },
-                    { pattern: ["C", "A", "?", "E"], answer: "S", icon: "💼", turkish: "Dava / Kutu" },
-                    { pattern: ["C", "A", "?", "E"], answer: "V", icon: "🦇", turkish: "Mağara" }
-                ],
-                3: [
-                    { pattern: ["C", "A", "R", "?"], answer: "D", icon: "🃏", turkish: "İskambil / Kartpostal" },
-                    { pattern: ["C", "A", "R", "?"], answer: "P", icon: "🐟", turkish: "Sazan Balığı" },
-                    { pattern: ["C", "A", "R", "?"], answer: "T", icon: "🛒", turkish: "Alışveriş Arabası" }
-                ]
+                2: [ { pattern: ["B", "E", "?", "R"], answer: "E", icon: "🍺", turkish: "Bira" } ]
             }
         },
         {
-            baseWord: "BEAT",
-            baseTurkish: "Vurmak / Yenmek",
+            baseWord: "CART", baseTurkish: "Alışveriş Arabası",
             changes: {
-                0: [
-                    { pattern: ["?", "E", "A", "T"], answer: "H", icon: "🔥", turkish: "Isı / Sıcaklık" },
-                    { pattern: ["?", "E", "A", "T"], answer: "M", icon: "🥩", turkish: "Et" },
-                    { pattern: ["?", "E", "A", "T"], answer: "N", icon: "🧹", turkish: "Düzenli / Temiz" },
+                0: [ 
+                    { pattern: ["?", "A", "R", "T"], answer: "D", icon: "🎯", turkish: "Ok / Fırlatmak" },
+                    { pattern: ["?", "A", "R", "T"], answer: "P", icon: "🧩", turkish: "Bölüm" },
+                    { pattern: ["?", "A", "R", "T"], answer: "T", icon: "🥧", turkish: "Ekşi / Meyveli Turta" },
+                    { pattern: ["?", "A", "R", "T"], answer: "REMOVE", icon: "🎨", turkish: "Sanat" }
+                ],
+                2: [ { pattern: ["C", "A", "?", "T"], answer: "S", icon: "🎣", turkish: "Fırlatmak / Alçı" } ],
+                3: [ { pattern: ["C", "A", "R", "?"], answer: "REMOVE", icon: "🚗", turkish: "Araba" } ]
+            }
+        },
+        {
+            baseWord: "PANT", baseTurkish: "Solumak",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "A", "N", "T"], answer: "C", icon: "📐", turkish: "Eğiklik" },
+                    { pattern: ["?", "A", "N", "T"], answer: "R", icon: "🗣️", turkish: "Bağırıp Çağırmak" },
+                    { pattern: ["?", "A", "N", "T"], answer: "REMOVE", icon: "🐜", turkish: "Karınca" }
+                ],
+                1: [ { pattern: ["P", "?", "N", "T"], answer: "I", icon: "🥛", turkish: "Sıvı Ölçüsü" } ],
+                2: [ { pattern: ["P", "A", "?", "T"], answer: "REMOVE", icon: "👋", turkish: "Hafifçe Vurmak" } ],
+                3: [ { pattern: ["P", "A", "N", "?"], answer: "REMOVE", icon: "🍳", turkish: "Tava" } ]
+            }
+        },
+        {
+            baseWord: "WIND", baseTurkish: "Rüzgar",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "I", "N", "D"], answer: "B", icon: "🔗", turkish: "Bağlamak" },
+                    { pattern: ["?", "I", "N", "D"], answer: "F", icon: "🔍", turkish: "Bulmak" },
+                    { pattern: ["?", "I", "N", "D"], answer: "H", icon: "🦌", turkish: "Arka" },
+                    { pattern: ["?", "I", "N", "D"], answer: "K", icon: "💖", turkish: "Kibar" },
+                    { pattern: ["?", "I", "N", "D"], answer: "M", icon: "🧠", turkish: "Akıl" },
+                    { pattern: ["?", "I", "N", "D"], answer: "R", icon: "🍋", turkish: "Kabuk" }
+                ],
+                1: [ { pattern: ["W", "?", "N", "D"], answer: "A", icon: "🪄", turkish: "Asa" } ],
+                3: [ { pattern: ["W", "I", "N", "?"], answer: "REMOVE", icon: "🏆", turkish: "Kazanmak" } ]
+            }
+        },
+        {
+            baseWord: "MEAT", baseTurkish: "Et",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "E", "A", "T"], answer: "B", icon: "🥁", turkish: "Vurmak" },
+                    { pattern: ["?", "E", "A", "T"], answer: "H", icon: "🔥", turkish: "Sıcaklık" },
+                    { pattern: ["?", "E", "A", "T"], answer: "N", icon: "🧹", turkish: "Düzenli" },
                     { pattern: ["?", "E", "A", "T"], answer: "P", icon: "🌱", turkish: "Turba Toprağı" },
                     { pattern: ["?", "E", "A", "T"], answer: "S", icon: "🪑", turkish: "Oturacak Yer" }
                 ],
-                1: [
-                    { pattern: ["B", "?", "A", "T"], answer: "O", icon: "⛵", turkish: "Tekne / Sandal" }
-                ],
-                2: [
-                    { pattern: ["B", "E", "?", "T"], answer: "S", icon: "🥇", turkish: "En İyi" }
-                ],
-                3: [
-                    { pattern: ["B", "E", "A", "?"], answer: "K", icon: "🦅", turkish: "Gaga" },
-                    { pattern: ["B", "E", "A", "?"], answer: "M", icon: "🔦", turkish: "Işın / Kiriş" },
-                    { pattern: ["B", "E", "A", "?"], answer: "N", icon: "🫘", turkish: "Fasulye" },
-                    { pattern: ["B", "E", "A", "?"], answer: "R", icon: "🐻", turkish: "Ayı" }
+                1: [ 
+                    { pattern: ["M", "?", "A", "T"], answer: "O", icon: "🏰", turkish: "Hendek" },
+                    { pattern: ["M", "?", "A", "T"], answer: "REMOVE", icon: "🚪", turkish: "Paspas" }
                 ]
             }
         },
         {
-            baseWord: "MINE",
-            baseTurkish: "Benimki / Maden",
+            baseWord: "COLD", baseTurkish: "Soğuk",
             changes: {
-                0: [
-                    { pattern: ["?", "I", "N", "E"], answer: "D", icon: "🍽️", turkish: "Akşam Yemeği Yemek" },
-                    { pattern: ["?", "I", "N", "E"], answer: "F", icon: "👍", turkish: "İnce / İyi" },
-                    { pattern: ["?", "I", "N", "E"], answer: "L", icon: "➖", turkish: "Çizgi / Hat" },
-                    { pattern: ["?", "I", "N", "E"], answer: "N", icon: "9️⃣", turkish: "Dokuz" },
-                    { pattern: ["?", "I", "N", "E"], answer: "P", icon: "🌲", turkish: "Çam Ağacı" },
-                    { pattern: ["?", "I", "N", "E"], answer: "V", icon: "🍇", turkish: "Asma / Sarmaşık" },
-                    { pattern: ["?", "I", "N", "E"], answer: "W", icon: "🍷", turkish: "Şarap" }
-                ],
-                1: [
-                    { pattern: ["M", "?", "N", "E"], answer: "A", icon: "🦁", turkish: "Yele" }
-                ],
-                2: [
-                    { pattern: ["M", "I", "?", "E"], answer: "C", icon: "🐁", turkish: "Fareler (Çoğul)" },
-                    { pattern: ["M", "I", "?", "E"], answer: "K", icon: "🎤", turkish: "Ses Alıcısı / Mikrofon" },
-                    { pattern: ["M", "I", "?", "E"], answer: "L", icon: "🛣️", turkish: "Mesafe Ölçüsü (Mil)" },
-                    { pattern: ["M", "I", "?", "E"], answer: "M", icon: "🤹", turkish: "Pandomimci" },
-                    { pattern: ["M", "I", "?", "E"], answer: "R", icon: "💩", turkish: "Çamur / Bataklık" },
-                    { pattern: ["M", "I", "?", "E"], answer: "T", icon: "🕷️", turkish: "Kene / Akar" }
-                ],
-                3: [
-                    { pattern: ["M", "I", "N", "?"], answer: "D", icon: "🧠", turkish: "Zihin / Akıl" },
-                    { pattern: ["M", "I", "N", "?"], answer: "T", icon: "🌿", turkish: "Nane" }
-                ]
-            }
-        },
-        {
-            baseWord: "BAND",
-            baseTurkish: "Topluluk",
-            changes: {
-                0: [
-                    { pattern: ["?", "A", "N", "D"], answer: "H", icon: "🖐️", turkish: "El" },
-                    { pattern: ["?", "A", "N", "D"], answer: "L", icon: "🏝️", turkish: "Kara / Arazi" },
-                    { pattern: ["?", "A", "N", "D"], answer: "S", icon: "🏖️", turkish: "Kum" }
-                ],
-                1: [
-                    { pattern: ["B", "?", "N", "D"], answer: "I", icon: "🔗", turkish: "Bağlamak" },
-                    { pattern: ["B", "?", "N", "D"], answer: "O", icon: "🤝", turkish: "İlişki / Bağ" }
-                ],
-                2: [
-                    { pattern: ["B", "A", "?", "D"], answer: "L", icon: "👨‍🦲", turkish: "Kel" },
-                    { pattern: ["B", "A", "?", "D"], answer: "R", icon: "🪕", turkish: "Ozan / Şair" }
-                ],
-                3: [
-                    { pattern: ["B", "A", "N", "?"], answer: "K", icon: "🏦", turkish: "Nehir Kıyısı / Finans Kurumu" }
-                ]
-            }
-        },
-        {
-            baseWord: "FIRE",
-            baseTurkish: "Ateş / Yangın",
-            changes: {
-                0: [
-                    { pattern: ["?", "I", "R", "E"], answer: "D", icon: "😨", turkish: "Korkunç / Dehşetli" },
-                    { pattern: ["?", "I", "R", "E"], answer: "H", icon: "🤝", turkish: "Kiralamak / İşe Almak" },
-                    { pattern: ["?", "I", "R", "E"], answer: "M", icon: "💩", turkish: "Bataklık" },
-                    { pattern: ["?", "I", "R", "E"], answer: "S", icon: "👑", turkish: "Efendi / Majeste" },
-                    { pattern: ["?", "I", "R", "E"], answer: "T", icon: "🥱", turkish: "Yorulmak" },
-                    { pattern: ["?", "I", "R", "E"], answer: "W", icon: "🔌", turkish: "Tel / Kablo" }
-                ],
-                1: [
-                    { pattern: ["F", "?", "R", "E"], answer: "A", icon: "🎫", turkish: "Bilet Ücreti" }
-                ],
-                2: [
-                    { pattern: ["F", "I", "?", "E"], answer: "L", icon: "📁", turkish: "Dosya" },
-                    { pattern: ["F", "I", "?", "E"], answer: "N", icon: "👍", turkish: "İyi / Hoş" },
-                    { pattern: ["F", "I", "?", "E"], answer: "V", icon: "5️⃣", turkish: "Beş" }
-                ],
-                3: [
-                    { pattern: ["F", "I", "R", "?"], answer: "M", icon: "🏢", turkish: "Şirket / Sıkı" }
-                ]
-            }
-        },
-        {
-            baseWord: "RICE",
-            baseTurkish: "Pirinç / Pilav",
-            changes: {
-                0: [
-                    { pattern: ["?", "I", "C", "E"], answer: "D", icon: "🎲", turkish: "Zar" },
-                    { pattern: ["?", "I", "C", "E"], answer: "L", icon: "🪲", turkish: "Bitler" },
-                    { pattern: ["?", "I", "C", "E"], answer: "M", icon: "🐁", turkish: "Fareler" },
-                    { pattern: ["?", "I", "C", "E"], answer: "N", icon: "😊", turkish: "Güzel / Hoş" },
-                    { pattern: ["?", "I", "C", "E"], answer: "V", icon: "😈", turkish: "Kusur / Kötü Alışkanlık" }
-                ],
-                1: [
-                    { pattern: ["R", "?", "C", "E"], answer: "A", icon: "🏁", turkish: "Yarış" }
-                ],
-                2: [
-                    { pattern: ["R", "I", "?", "E"], answer: "D", icon: "🚲", turkish: "Binmek" },
-                    { pattern: ["R", "I", "?", "E"], answer: "F", icon: "🌊", turkish: "Yaygın / Bol" },
-                    { pattern: ["R", "I", "?", "E"], answer: "L", icon: "😠", turkish: "Kızdırmak" },
-                    { pattern: ["R", "I", "?", "E"], answer: "P", icon: "🍌", turkish: "Olgun (Meyve)" },
-                    { pattern: ["R", "I", "?", "E"], answer: "S", icon: "🌅", turkish: "Yükselmek" },
-                    { pattern: ["R", "I", "?", "E"], answer: "T", icon: "🕯️", turkish: "Dini Tören / Ayin" }
-                ],
-                3: [
-                    { pattern: ["R", "I", "C", "?"], answer: "H", icon: "💰", turkish: "Zengin" },
-                    { pattern: ["R", "I", "C", "?"], answer: "K", icon: "🌾", turkish: "Ot Yığını" }
-                ]
-            }
-        },
-        {
-            baseWord: "TENT",
-            baseTurkish: "Çadır",
-            changes: {
-                0: [
-                    { pattern: ["?", "E", "N", "T"], answer: "C", icon: "🪙", turkish: "Kuruş" },
-                    { pattern: ["?", "E", "N", "T"], answer: "D", icon: "🚗", turkish: "Göçük / Çukur" },
-                    { pattern: ["?", "E", "N", "T"], answer: "R", icon: "🏠", turkish: "Kira" },
-                    { pattern: ["?", "E", "N", "T"], answer: "V", icon: "💨", turkish: "Havalandırma Deliği" }
-                ],
-                1: [
-                    { pattern: ["T", "?", "N", "T"], answer: "I", icon: "🎨", turkish: "Hafif Renk / Ton" }
-                ],
-                2: [
-                    { pattern: ["T", "E", "?", "T"], answer: "S", icon: "📝", turkish: "Sınav" },
-                    { pattern: ["T", "E", "?", "T"], answer: "X", icon: "📱", turkish: "Metin / Yazı" }
-                ],
-                3: [
-                    { pattern: ["T", "E", "N", "?"], answer: "D", icon: "🌱", turkish: "Eğilimi Olmak / Bakmak" }
-                ]
-            }
-        },
-        {
-            baseWord: "FOLD",
-            baseTurkish: "Katlamak",
-            changes: {
-                0: [
+                0: [ 
                     { pattern: ["?", "O", "L", "D"], answer: "B", icon: "🦸", turkish: "Cesur" },
-                    { pattern: ["?", "O", "L", "D"], answer: "C", icon: "🥶", turkish: "Soğuk" },
+                    { pattern: ["?", "O", "L", "D"], answer: "F", icon: "📄", turkish: "Katlamak" },
                     { pattern: ["?", "O", "L", "D"], answer: "G", icon: "🥇", turkish: "Altın" },
                     { pattern: ["?", "O", "L", "D"], answer: "H", icon: "✊", turkish: "Tutmak" },
-                    { pattern: ["?", "O", "L", "D"], answer: "M", icon: "🦠", turkish: "Küf / Kalıp" }
+                    { pattern: ["?", "O", "L", "D"], answer: "M", icon: "🦠", turkish: "Küf" },
+                    { pattern: ["?", "O", "L", "D"], answer: "S", icon: "💰", turkish: "Satıldı" },
+                    { pattern: ["?", "O", "L", "D"], answer: "REMOVE", icon: "👴", turkish: "Eski / Yaşlı" }
                 ],
-                1: [], 
-                2: [
-                    { pattern: ["F", "O", "?", "D"], answer: "N", icon: "🥰", turkish: "Düşkün / Seven" },
-                    { pattern: ["F", "O", "?", "D"], answer: "O", icon: "🍔", turkish: "Yiyecek / Yemek" }
-                ],
-                3: [
-                    { pattern: ["F", "O", "L", "?"], answer: "K", icon: "🧑‍🤝‍🧑", turkish: "Halk / İnsanlar" }
-                ]
+                1: [ { pattern: ["C", "?", "L", "D"], answer: "R", icon: "🧶", turkish: "Kablo / İp" } ]
             }
         },
         {
-            baseWord: "TAIL",
-            baseTurkish: "Kuyruk",
+            baseWord: "TONE", baseTurkish: "Ses Vurgusu",
             changes: {
-                0: [
-                    { pattern: ["?", "A", "I", "L"], answer: "B", icon: "⚖️", turkish: "Kefalet" },
-                    { pattern: ["?", "A", "I", "L"], answer: "F", icon: "❌", turkish: "Başarısız Olmak" },
-                    { pattern: ["?", "A", "I", "L"], answer: "H", icon: "🌨️", turkish: "Dolu (Yağış)" },
-                    { pattern: ["?", "A", "I", "L"], answer: "J", icon: "🚔", turkish: "Hapishane" },
-                    { pattern: ["?", "A", "I", "L"], answer: "M", icon: "✉️", turkish: "Posta" },
-                    { pattern: ["?", "A", "I", "L"], answer: "N", icon: "💅", turkish: "Tırnak / Çivi" },
-                    { pattern: ["?", "A", "I", "L"], answer: "P", icon: "🪣", turkish: "Kova" },
-                    { pattern: ["?", "A", "I", "L"], answer: "R", icon: "🛤️", turkish: "Ray" },
-                    { pattern: ["?", "A", "I", "L"], answer: "S", icon: "⛵", turkish: "Yelken Açmak" }
+                0: [ 
+                    { pattern: ["?", "O", "N", "E"], answer: "B", icon: "🦴", turkish: "Kemik" },
+                    { pattern: ["?", "O", "N", "E"], answer: "C", icon: "🍦", turkish: "Koni" },
+                    { pattern: ["?", "O", "N", "E"], answer: "L", icon: "🐺", turkish: "Yalnız" },
+                    { pattern: ["?", "O", "N", "E"], answer: "Z", icon: "🚧", turkish: "Bölge" }
                 ],
-                1: [
-                    { pattern: ["T", "?", "I", "L"], answer: "O", icon: "😓", turkish: "Çok Çalışmak / Emek" }
-                ],
-                2: [
-                    { pattern: ["T", "A", "?", "L"], answer: "L", icon: "🦒", turkish: "Uzun Boylu" }
-                ],
-                3: [] 
+                1: [ { pattern: ["T", "?", "N", "E"], answer: "U", icon: "🎵", turkish: "Melodi" } ],
+                3: [ { pattern: ["T", "O", "N", "?"], answer: "REMOVE", icon: "🐘", turkish: "Ağırlık Birimi" } ]
             }
         },
         {
-            baseWord: "LANE",
-            baseTurkish: "Şerit / Dar Yol",
+            baseWord: "BOWL", baseTurkish: "Derin Kase",
             changes: {
-                0: [
-                    { pattern: ["?", "A", "N", "E"], answer: "C", icon: "🦯", turkish: "Baston" },
-                    { pattern: ["?", "A", "N", "E"], answer: "M", icon: "🦁", turkish: "Yele" },
-                    { pattern: ["?", "A", "N", "E"], answer: "P", icon: "🪟", turkish: "Pencere Camı" },
-                    { pattern: ["?", "A", "N", "E"], answer: "S", icon: "🧠", turkish: "Akli Dengesi Yerinde" },
-                    { pattern: ["?", "A", "N", "E"], answer: "V", icon: "🌬️", turkish: "Rüzgar Gülü" }
+                0: [ 
+                    { pattern: ["?", "O", "W", "L"], answer: "F", icon: "🦃", turkish: "Kümes Hayvanı" },
+                    { pattern: ["?", "O", "W", "L"], answer: "H", icon: "🐺", turkish: "Ulumak" }
                 ],
-                1: [
-                    { pattern: ["L", "?", "N", "E"], answer: "O", icon: "🐺", turkish: "Yalnız / Tek" }
+                1: [ { pattern: ["B", "?", "W", "L"], answer: "A", icon: "😭", turkish: "Bağıra Çağıra Ağlamak" } ],
+                3: [ { pattern: ["B", "O", "W", "?"], answer: "REMOVE", icon: "🏹", turkish: "Yay / Eğilmek" } ]
+            }
+        },
+        {
+            baseWord: "CAME", baseTurkish: "Geldi",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "A", "M", "E"], answer: "D", icon: "💃", turkish: "Hanımefendi" },
+                    { pattern: ["?", "A", "M", "E"], answer: "F", icon: "🌟", turkish: "Şöhret" },
+                    { pattern: ["?", "A", "M", "E"], answer: "G", icon: "🎲", turkish: "Oyun" },
+                    { pattern: ["?", "A", "M", "E"], answer: "L", icon: "🩼", turkish: "Topal" },
+                    { pattern: ["?", "A", "M", "E"], answer: "N", icon: "📛", turkish: "İsim" },
+                    { pattern: ["?", "A", "M", "E"], answer: "S", icon: "👯", turkish: "Aynı" },
+                    { pattern: ["?", "A", "M", "E"], answer: "T", icon: "🐕", turkish: "Evcil" }
                 ],
-                2: [
-                    { pattern: ["L", "A", "?", "E"], answer: "C", icon: "🎀", turkish: "Dantel / Bağcık" },
-                    { pattern: ["L", "A", "?", "E"], answer: "M", icon: "🩼", turkish: "Topal / Aksak" },
-                    { pattern: ["L", "A", "?", "E"], answer: "T", icon: "⏰", turkish: "Geç" }
+                2: [ 
+                    { pattern: ["C", "A", "?", "E"], answer: "P", icon: "🦸", turkish: "Pelerin" },
+                    { pattern: ["C", "A", "?", "E"], answer: "R", icon: "🫂", turkish: "Önemsemek" },
+                    { pattern: ["C", "A", "?", "E"], answer: "S", icon: "💼", turkish: "Dava / Kutu" },
+                    { pattern: ["C", "A", "?", "E"], answer: "V", icon: "🦇", turkish: "Mağara" }
                 ],
-                3: [
-                    { pattern: ["L", "A", "N", "?"], answer: "D", icon: "🏝️", turkish: "Kara / Arazi" }
-                ]
+                3: [ { pattern: ["C", "A", "M", "?"], answer: "REMOVE", icon: "⚙️", turkish: "Görüntü Kaydedici / Eksantrik" } ]
+            }
+        },
+        {
+            baseWord: "STOP", baseTurkish: "Durmak",
+            changes: {
+                0: [ { pattern: ["?", "T", "O", "P"], answer: "REMOVE", icon: "🔝", turkish: "Üst / Zirve" } ],
+                1: [ { pattern: ["S", "?", "O", "P"], answer: "L", icon: "🐖", turkish: "Dökmek" } ],
+                2: [ { pattern: ["S", "T", "?", "P"], answer: "E", icon: "👞", turkish: "Adım" } ]
             }
         }
     ],
 
     // ==========================================
-    // 5-LETTER FAMILIES
+    // 5-LETTER FAMILIES 
     // ==========================================
     5: [
         {
-            baseWord: "STORE",
-            baseTurkish: "Dükkan / Depolamak",
+            baseWord: "BEAST", baseTurkish: "Canavar",
             changes: {
-                1: [ 
-                    { pattern: ["S", "?", "O", "R", "E"], answer: "H", icon: "🏖️", turkish: "Kıyı / Sahil" },
-                    { pattern: ["S", "?", "O", "R", "E"], answer: "N", icon: "😴", turkish: "Horlamak" },
-                    { pattern: ["S", "?", "O", "R", "E"], answer: "P", icon: "🍄", turkish: "Tohum / Spor" }
+                0: [ 
+                    { pattern: ["?", "E", "A", "S", "T"], answer: "F", icon: "🍗", turkish: "Ziyafet" },
+                    { pattern: ["?", "E", "A", "S", "T"], answer: "Y", icon: "🍞", turkish: "Maya" }
                 ],
+                1: [ { pattern: ["B", "?", "A", "S", "T"], answer: "O", icon: "🗣️", turkish: "Övünmek" } ],
+                2: [ { pattern: ["B", "E", "?", "S", "T"], answer: "REMOVE", icon: "🥇", turkish: "En İyi" } ]
+            }
+        },
+        {
+            baseWord: "BLAND", baseTurkish: "Yavan / Tatsız",
+            changes: {
+                0: [ { pattern: ["?", "L", "A", "N", "D"], answer: "G", icon: "💧", turkish: "Salgı Bezi" } ],
+                1: [ { pattern: ["B", "?", "A", "N", "D"], answer: "REMOVE", icon: "🎸", turkish: "Topluluk" } ],
                 2: [ 
-                    { pattern: ["S", "T", "?", "R", "E"], answer: "A", icon: "👀", turkish: "Gözünü Dikmek" }
-                ],
-                3: [ 
-                    { pattern: ["S", "T", "O", "?", "E"], answer: "K", icon: "🔥", turkish: "Ateşi Harlamak" },
-                    { pattern: ["S", "T", "O", "?", "E"], answer: "N", icon: "🪨", turkish: "Taş" },
-                    { pattern: ["S", "T", "O", "?", "E"], answer: "V", icon: "🍳", turkish: "Ocak / Soba" }
-                ],
-                4: [ 
-                    { pattern: ["S", "T", "O", "R", "?"], answer: "K", icon: "🦩", turkish: "Leylek" },
-                    { pattern: ["S", "T", "O", "R", "?"], answer: "M", icon: "⛈️", turkish: "Fırtına" }
+                    { pattern: ["B", "L", "?", "N", "D"], answer: "I", icon: "🦯", turkish: "Kör" },
+                    { pattern: ["B", "L", "?", "N", "D"], answer: "O", icon: "👱", turkish: "Sarışın" }
                 ]
             }
         },
         {
-            baseWord: "SCARE",
-            baseTurkish: "Korkutmak",
+            baseWord: "TRACK", baseTurkish: "İz / Yörünge",
             changes: {
-                1: [
+                0: [ 
+                    { pattern: ["?", "R", "A", "C", "K"], answer: "C", icon: "⚡", turkish: "Çatlak" },
+                    { pattern: ["?", "R", "A", "C", "K"], answer: "S", icon: "👋", turkish: "Şaplak" },
+                    { pattern: ["?", "R", "A", "C", "K"], answer: "REMOVE", icon: "🪚", turkish: "Raf" }
+                ],
+                1: [ { pattern: ["T", "?", "A", "C", "K"], answer: "REMOVE", icon: "📌", turkish: "Raptiye" } ],
+                2: [ 
+                    { pattern: ["T", "R", "?", "C", "K"], answer: "I", icon: "🎩", turkish: "Hile" },
+                    { pattern: ["T", "R", "?", "C", "K"], answer: "U", icon: "🚚", turkish: "Kamyon" }
+                ]
+            }
+        },
+        {
+            baseWord: "SCARE", baseTurkish: "Korkutmak",
+            changes: {
+                0: [ { pattern: ["?", "C", "A", "R", "E"], answer: "REMOVE", icon: "🫂", turkish: "Önemsemek" } ],
+                1: [ 
                     { pattern: ["S", "?", "A", "R", "E"], answer: "H", icon: "🤝", turkish: "Paylaşmak" },
                     { pattern: ["S", "?", "A", "R", "E"], answer: "N", icon: "🪤", turkish: "Tuzak" },
-                    { pattern: ["S", "?", "A", "R", "E"], answer: "P", icon: "🎳", turkish: "Yedek / Ayırmak" },
+                    { pattern: ["S", "?", "A", "R", "E"], answer: "P", icon: "🎳", turkish: "Yedek" },
                     { pattern: ["S", "?", "A", "R", "E"], answer: "T", icon: "👀", turkish: "Gözünü Dikmek" }
                 ],
-                2: [
-                    { pattern: ["S", "C", "?", "R", "E"], answer: "O", icon: "💯", turkish: "Puan / Sonuç" }
-                ],
-                3: [
-                    { pattern: ["S", "C", "A", "?", "E"], answer: "L", icon: "⚖️", turkish: "Pullar / Tartı" }
-                ],
-                4: [
-                    { pattern: ["S", "C", "A", "R", "?"], answer: "F", icon: "🧣", turkish: "Atkı / Kaşkol" }
-                ]
+                2: [ { pattern: ["S", "C", "?", "R", "E"], answer: "O", icon: "💯", turkish: "Puan / Sonuç" } ],
+                4: [ { pattern: ["S", "C", "A", "R", "?"], answer: "REMOVE", icon: "🤕", turkish: "Yara İzi" } ]
             }
         },
         {
-            baseWord: "SHAKE",
-            baseTurkish: "Sallamak / Titremek",
+            baseWord: "TRAIN", baseTurkish: "Eğitmek / Demir Yolu Aracı",
             changes: {
-                1: [
-                    { pattern: ["S", "?", "A", "K", "E"], answer: "N", icon: "🐍", turkish: "Yılan" },
-                    { pattern: ["S", "?", "A", "K", "E"], answer: "T", icon: "🧛", turkish: "Kazık / Risk" }
-                ],
-                3: [
-                    { pattern: ["S", "H", "A", "?", "E"], answer: "D", icon: "🌳", turkish: "Gölge" },
-                    { pattern: ["S", "H", "A", "?", "E"], answer: "M", icon: "😳", turkish: "Utanç" },
-                    { pattern: ["S", "H", "A", "?", "E"], answer: "P", icon: "🔺", turkish: "Şekil / Biçim" },
-                    { pattern: ["S", "H", "A", "?", "E"], answer: "R", icon: "🤝", turkish: "Paylaşmak" },
-                    { pattern: ["S", "H", "A", "?", "E"], answer: "V", icon: "🪒", turkish: "Tıraş Olmak" }
-                ],
-                4: [
-                    { pattern: ["S", "H", "A", "K", "?"], answer: "R", icon: "🦈", turkish: "Köpek Balığı" },
-                    { pattern: ["S", "H", "A", "K", "?"], answer: "P", icon: "🔪", turkish: "Keskin" }
-                ]
-            }
-        },
-        {
-            baseWord: "SPICE",
-            baseTurkish: "Baharat",
-            changes: {
-                1: [
-                    { pattern: ["S", "?", "I", "C", "E"], answer: "L", icon: "🍕", turkish: "Dilim" }
-                ],
-                2: [
-                    { pattern: ["S", "P", "?", "C", "E"], answer: "A", icon: "🚀", turkish: "Uzay / Boşluk" }
-                ],
-                3: [
-                    { pattern: ["S", "P", "I", "?", "E"], answer: "K", icon: "📌", turkish: "Sivri Uç" },
-                    { pattern: ["S", "P", "I", "?", "E"], answer: "N", icon: "🦴", turkish: "Omurga" },
-                    { pattern: ["S", "P", "I", "?", "E"], answer: "R", icon: "⛪", turkish: "Sivri Kule" },
-                    { pattern: ["S", "P", "I", "?", "E"], answer: "T", icon: "😠", turkish: "Kin / İnat" }
-                ],
-                4: [
-                    { pattern: ["S", "P", "I", "C", "?"], answer: "Y", icon: "🌶️", turkish: "Acılı" }
-                ]
-            }
-        },
-        {
-            baseWord: "TRACE",
-            baseTurkish: "İzini Sürmek",
-            changes: {
-                0: [
-                    { pattern: ["?", "R", "A", "C", "E"], answer: "G", icon: "🦢", turkish: "Zarafet / Lütuf" }
-                ],
-                3: [
-                    { pattern: ["T", "R", "A", "?", "E"], answer: "D", icon: "🔄", turkish: "Ticaret" }
-                ],
-                4: [
-                    { pattern: ["T", "R", "A", "C", "?"], answer: "K", icon: "👣", turkish: "İz / Yörünge" },
-                    { pattern: ["T", "R", "A", "C", "?"], answer: "T", icon: "🗺️", turkish: "Bölge / Sistem" }
-                ]
-            }
-        },
-        {
-            baseWord: "CRANE",
-            baseTurkish: "Vinç / Turna Kuşu",
-            changes: {
-                3: [
-                    { pattern: ["C", "R", "A", "?", "E"], answer: "T", icon: "📦", turkish: "Tahta Sandık" },
-                    { pattern: ["C", "R", "A", "?", "E"], answer: "V", icon: "🤤", turkish: "Aşırı İstemek" },
-                    { pattern: ["C", "R", "A", "?", "E"], answer: "Z", icon: "🤪", turkish: "Çılgınlık / Akım" }
-                ],
-                4: [
-                    { pattern: ["C", "R", "A", "N", "?"], answer: "K", icon: "⚙️", turkish: "Çevirme Kolu" }
-                ]
-            }
-        },
-        {
-            baseWord: "BLANK",
-            baseTurkish: "Boşluk / Boş",
-            changes: {
-                0: [
-                    { pattern: ["?", "L", "A", "N", "K"], answer: "F", icon: "🐎", turkish: "Böğür / Yan Cephe" },
-                    { pattern: ["?", "L", "A", "N", "K"], answer: "P", icon: "🪵", turkish: "Kalas / Tahta" }
-                ],
-                2: [
-                    { pattern: ["B", "L", "?", "N", "K"], answer: "I", icon: "😉", turkish: "Göz Kırpmak" }
-                ],
-                4: [
-                    { pattern: ["B", "L", "A", "N", "?"], answer: "D", icon: "🍞", turkish: "Yavan / Tatsız" }
-                ]
-            }
-        },
-        {
-            baseWord: "MARCH",
-            baseTurkish: "Yürüyüş / İlerlemek",
-            changes: {
-                0: [
-                    { pattern: ["?", "A", "R", "C", "H"], answer: "P", icon: "🏜️", turkish: "Kavrulmak / Kurumak" }
-                ],
-                2: [
-                    { pattern: ["M", "A", "?", "C", "H"], answer: "T", icon: "🧨", turkish: "Eşleşmek / Kibrit" }
-                ],
-                3: [
-                    { pattern: ["M", "A", "R", "?", "H"], answer: "S", icon: "🐸", turkish: "Bataklık" }
-                ]
-            }
-        },
-        {
-            baseWord: "BROOM",
-            baseTurkish: "Süpürge",
-            changes: {
-                0: [
-                    { pattern: ["?", "R", "O", "O", "M"], answer: "G", icon: "🤵", turkish: "Damat / Tımar Etmek" }
-                ],
-                1: [
-                    { pattern: ["B", "?", "O", "O", "M"], answer: "L", icon: "🌸", turkish: "Çiçek Açmak" }
-                ],
-                4: [
-                    { pattern: ["B", "R", "O", "O", "?"], answer: "D", icon: "🪺", turkish: "Kuluçka / Kara Kara Düşünmek" },
-                    { pattern: ["B", "R", "O", "O", "?"], answer: "K", icon: "🏞️", turkish: "Dere / Akarsu" }
-                ]
-            }
-        },
-        {
-            baseWord: "TRAIN",
-            baseTurkish: "Tren / Eğitmek",
-            changes: {
-                0: [
+                0: [ 
                     { pattern: ["?", "R", "A", "I", "N"], answer: "B", icon: "🧠", turkish: "Beyin" },
-                    { pattern: ["?", "R", "A", "I", "N"], answer: "D", icon: "🚰", turkish: "Gider / Akıtmak" },
-                    { pattern: ["?", "R", "A", "I", "N"], answer: "G", icon: "🌾", turkish: "Tahıl / Tanecik" }
+                    { pattern: ["?", "R", "A", "I", "N"], answer: "D", icon: "🚰", turkish: "Gider" },
+                    { pattern: ["?", "R", "A", "I", "N"], answer: "G", icon: "🌾", turkish: "Tahıl" },
+                    { pattern: ["?", "R", "A", "I", "N"], answer: "REMOVE", icon: "🌧️", turkish: "Yağmur" }
                 ],
-                4: [
-                    { pattern: ["T", "R", "A", "I", "?"], answer: "L", icon: "🛤️", turkish: "Patika / İz" },
+                4: [ 
+                    { pattern: ["T", "R", "A", "I", "?"], answer: "L", icon: "🛤️", turkish: "Patika" },
                     { pattern: ["T", "R", "A", "I", "?"], answer: "T", icon: "🧬", turkish: "Karakter Özelliği" }
+                ]
+            }
+        },
+        {
+            baseWord: "SPARK", baseTurkish: "Kıvılcım",
+            changes: {
+                0: [ { pattern: ["?", "P", "A", "R", "K"], answer: "REMOVE", icon: "🏞️", turkish: "Yeşil Alan" } ],
+                2: [ { pattern: ["S", "P", "?", "R", "K"], answer: "O", icon: "🍴", turkish: "Kaşıklı Çatal" } ]
+            }
+        },
+        {
+            baseWord: "WHEAT", baseTurkish: "Buğday",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "H", "E", "A", "T"], answer: "C", icon: "🃏", turkish: "Hile Yapmak" },
+                    { pattern: ["?", "H", "E", "A", "T"], answer: "REMOVE", icon: "🔥", turkish: "Isı" }
+                ]
+            }
+        },
+        {
+            baseWord: "PRICE", baseTurkish: "Bedel / Değer",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "R", "I", "C", "E"], answer: "T", icon: "⏱️", turkish: "Göz Açıp Kapayıncaya Kadar" },
+                    { pattern: ["?", "R", "I", "C", "E"], answer: "REMOVE", icon: "🍚", turkish: "Pirinç" }
+                ]
+            }
+        },
+        {
+            baseWord: "CHARM", baseTurkish: "Cazibe",
+            changes: {
+                0: [ { pattern: ["?", "H", "A", "R", "M"], answer: "REMOVE", icon: "🤕", turkish: "Zarar" } ],
+                3: [ { pattern: ["C", "H", "A", "?", "M"], answer: "T", icon: "📊", turkish: "Çizelge" } ]
+            }
+        },
+        {
+            baseWord: "BROAD", baseTurkish: "Geniş",
+            changes: {
+                0: [ { pattern: ["?", "R", "O", "A", "D"], answer: "REMOVE", icon: "🛣️", turkish: "Yol" } ],
+                2: [ 
+                    { pattern: ["B", "R", "?", "A", "D"], answer: "A", icon: "👧", turkish: "Örgü" },
+                    { pattern: ["B", "R", "?", "A", "D"], answer: "E", icon: "🍞", turkish: "Ekmek" }
                 ]
             }
         }
     ],
 
     // ==========================================
-    // 6-LETTER FAMILIES (Ready for the next expansion!)
+    // 6-LETTER FAMILIES 
     // ==========================================
-    6: []
+    6: [
+        {
+            baseWord: "PLANET", baseTurkish: "Gezegen",
+            changes: {
+                4: [ { pattern: ["P", "L", "A", "N", "?", "T"], answer: "REMOVE", icon: "🌱", turkish: "Bitki" } ],
+                5: [ { pattern: ["P", "L", "A", "N", "E", "?"], answer: "R", icon: "🗜️", turkish: "Rende Makinesi" } ]
+            }
+        },
+        {
+            baseWord: "STRAIN", baseTurkish: "Gerginlik",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "T", "R", "A", "I", "N"], answer: "P", icon: "🦵", turkish: "Burkulma" },
+                    { pattern: ["?", "T", "R", "A", "I", "N"], answer: "REMOVE", icon: "🚂", turkish: "Eğitmek" }
+                ],
+                2: [ { pattern: ["S", "T", "?", "A", "I", "N"], answer: "REMOVE", icon: "☕", turkish: "Leke" } ]
+            }
+        },
+        {
+            baseWord: "HEARTH", baseTurkish: "Ocak / Şömine",
+            changes: {
+                0: [ { pattern: ["?", "E", "A", "R", "T", "H"], answer: "REMOVE", icon: "🌍", turkish: "Dünya" } ],
+                5: [ { pattern: ["H", "E", "A", "R", "T", "?"], answer: "REMOVE", icon: "❤️", turkish: "Kalp" } ]
+            }
+        },
+        {
+            baseWord: "THREAD", baseTurkish: "İplik",
+            changes: {
+                1: [ { pattern: ["T", "?", "R", "E", "A", "D"], answer: "REMOVE", icon: "🥾", turkish: "Adım Atmak" } ],
+                5: [ { pattern: ["T", "H", "R", "E", "A", "?"], answer: "T", icon: "⚠️", turkish: "Tehdit" } ]
+            }
+        },
+        {
+            baseWord: "SCREAM", baseTurkish: "Çığlık",
+            changes: {
+                0: [ { pattern: ["?", "C", "R", "E", "A", "M"], answer: "REMOVE", icon: "🍦", turkish: "Kaymak" } ],
+                1: [ { pattern: ["S", "?", "R", "E", "A", "M"], answer: "T", icon: "🏞️", turkish: "Akarsu" } ]
+            }
+        },
+        {
+            baseWord: "FLIGHT", baseTurkish: "Uçuş",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "L", "I", "G", "H", "T"], answer: "B", icon: "🥀", turkish: "Hastalık" },
+                    { pattern: ["?", "L", "I", "G", "H", "T"], answer: "P", icon: "😰", turkish: "Zor Durum" },
+                    { pattern: ["?", "L", "I", "G", "H", "T"], answer: "S", icon: "🪶", turkish: "Hafif / Az" },
+                    { pattern: ["?", "L", "I", "G", "H", "T"], answer: "REMOVE", icon: "💡", turkish: "Işık" }
+                ]
+            }
+        },
+        {
+            baseWord: "BRIGHT", baseTurkish: "Parlak",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "R", "I", "G", "H", "T"], answer: "F", icon: "😱", turkish: "Korku" },
+                    { pattern: ["?", "R", "I", "G", "H", "T"], answer: "REMOVE", icon: "➡️", turkish: "Doğru / Sağ" }
+                ]
+            }
+        },
+        {
+            baseWord: "STROKE", baseTurkish: "Vuruş / Felç",
+            changes: {
+                2: [ { pattern: ["S", "T", "?", "O", "K", "E"], answer: "REMOVE", icon: "🔥", turkish: "Ateşi Harlamak" } ],
+                3: [ { pattern: ["S", "T", "R", "?", "K", "E"], answer: "I", icon: "🎳", turkish: "Vurmak" } ]
+            }
+        },
+        {
+            baseWord: "SPLASH", baseTurkish: "Sıçramak",
+            changes: {
+                0: [ { pattern: ["?", "P", "L", "A", "S", "H"], answer: "REMOVE", icon: "💦", turkish: "Şıpırtı" } ],
+                1: [ { pattern: ["S", "?", "L", "A", "S", "H"], answer: "REMOVE", icon: "🗡️", turkish: "Eğik Çizgi" } ],
+                2: [ { pattern: ["S", "P", "?", "A", "S", "H"], answer: "M", icon: "💥", turkish: "Parçalamak" } ]
+            }
+        },
+        {
+            baseWord: "BRIDGE", baseTurkish: "Köprü",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "R", "I", "D", "G", "E"], answer: "F", icon: "🧊", turkish: "Soğutucu" },
+                    { pattern: ["?", "R", "I", "D", "G", "E"], answer: "REMOVE", icon: "⛰️", turkish: "Bayır / Sırt" }
+                ]
+            }
+        }
+    ],
+
+    // ==========================================
+    // 7-LETTER FAMILIES 
+    // ==========================================
+    7: [
+        {
+            baseWord: "CHATTER", baseTurkish: "Gevezelik",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "H", "A", "T", "T", "E", "R"], answer: "S", icon: "⚡", turkish: "Tuzla Buz Olmak" },
+                    { pattern: ["?", "H", "A", "T", "T", "E", "R"], answer: "REMOVE", icon: "🎩", turkish: "Şapkacı" }
+                ],
+                1: [ { pattern: ["C", "?", "A", "T", "T", "E", "R"], answer: "L", icon: "🍽️", turkish: "Tıkırtı" } ]
+            }
+        },
+        {
+            baseWord: "SPATTER", baseTurkish: "Sıçratmak",
+            changes: {
+                0: [ { pattern: ["?", "P", "A", "T", "T", "E", "R"], answer: "REMOVE", icon: "🌧️", turkish: "Pıtpıt Ses Çıkarmak" } ],
+                1: [ 
+                    { pattern: ["S", "?", "A", "T", "T", "E", "R"], answer: "H", icon: "⚡", turkish: "Tuzla Buz Olmak" },
+                    { pattern: ["S", "?", "A", "T", "T", "E", "R"], answer: "M", icon: "🤷", turkish: "Yarım Yamalak Bilmek" }
+                ]
+            }
+        },
+        {
+            baseWord: "FLATTER", baseTurkish: "Yağ Çekmek",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "L", "A", "T", "T", "E", "R"], answer: "C", icon: "🍽️", turkish: "Tıkırtı" },
+                    { pattern: ["?", "L", "A", "T", "T", "E", "R"], answer: "P", icon: "🥘", turkish: "Büyük Servis Tabağı" }
+                ],
+                2: [ 
+                    { pattern: ["F", "L", "?", "T", "T", "E", "R"], answer: "I", icon: "🦋", turkish: "Pır Pır Uçmak" },
+                    { pattern: ["F", "L", "?", "T", "T", "E", "R"], answer: "U", icon: "🕊️", turkish: "Kanat Çırpmak" }
+                ]
+            }
+        },
+        {
+            baseWord: "POUNDER", baseTurkish: "Ezen / Dövücü",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "O", "U", "N", "D", "E", "R"], answer: "B", icon: "😒", turkish: "Terbiyesiz Adam" },
+                    { pattern: ["?", "O", "U", "N", "D", "E", "R"], answer: "F", icon: "🏗️", turkish: "Kurucu" },
+                    { pattern: ["?", "O", "U", "N", "D", "E", "R"], answer: "R", icon: "⚪", turkish: "Daha Yuvarlak" },
+                    { pattern: ["?", "O", "U", "N", "D", "E", "R"], answer: "S", icon: "📡", turkish: "Sinyal Cihazı" }
+                ]
+            }
+        },
+        {
+            baseWord: "BLUNDER", baseTurkish: "Büyük Hata",
+            changes: {
+                0: [ { pattern: ["?", "L", "U", "N", "D", "E", "R"], answer: "P", icon: "🏴‍☠️", turkish: "Yağmalamak" } ],
+                1: [ { pattern: ["B", "?", "U", "N", "D", "E", "R"], answer: "O", icon: "😒", turkish: "Terbiyesiz Adam" } ],
+                2: [ { pattern: ["B", "L", "?", "N", "D", "E", "R"], answer: "I", icon: "🐴", turkish: "At Gözlüğü" } ]
+            }
+        },
+        {
+            baseWord: "CHOPPER", baseTurkish: "Satır / Kesici",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "H", "O", "P", "P", "E", "R"], answer: "S", icon: "🛍️", turkish: "Alışveriş Yapan Kişi" },
+                    { pattern: ["?", "H", "O", "P", "P", "E", "R"], answer: "REMOVE", icon: "🦗", turkish: "Sıçrayan Böcek" }
+                ],
+                2: [ { pattern: ["C", "H", "?", "P", "P", "E", "R"], answer: "I", icon: "😄", turkish: "Neşeli" } ]
+            }
+        },
+        {
+            baseWord: "STICKER", baseTurkish: "Yapışkan Etiket",
+            changes: {
+                0: [ { pattern: ["?", "T", "I", "C", "K", "E", "R"], answer: "REMOVE", icon: "⌚", turkish: "Saat / Kalp" } ],
+                1: [ 
+                    { pattern: ["S", "?", "I", "C", "K", "E", "R"], answer: "L", icon: "🧥", turkish: "Yağmurluk" },
+                    { pattern: ["S", "?", "I", "C", "K", "E", "R"], answer: "N", icon: "🤭", turkish: "Kıs Kıs Gülmek" }
+                ]
+            }
+        },
+        {
+            baseWord: "WEATHER", baseTurkish: "Hava Durumu",
+            changes: {
+                0: [ 
+                    { pattern: ["?", "E", "A", "T", "H", "E", "R"], answer: "F", icon: "🪶", turkish: "Tüy" },
+                    { pattern: ["?", "E", "A", "T", "H", "E", "R"], answer: "H", icon: "🌿", turkish: "Süpürge Otu" },
+                    { pattern: ["?", "E", "A", "T", "H", "E", "R"], answer: "L", icon: "👞", turkish: "Deri" }
+                ]
+            }
+        },
+        {
+            baseWord: "STAMPER", baseTurkish: "Damgalayıcı",
+            changes: {
+                0: [ { pattern: ["?", "T", "A", "M", "P", "E", "R"], answer: "REMOVE", icon: "🔧", turkish: "Kurcalamak" } ],
+                1: [ { pattern: ["S", "?", "A", "M", "P", "E", "R"], answer: "C", icon: "🐁", turkish: "Koşturmak" } ],
+                2: [ { pattern: ["S", "T", "?", "M", "P", "E", "R"], answer: "O", icon: "🥾", turkish: "Ağır Adımla Yürüyen" } ]
+            }
+        }
+    ]
 };
