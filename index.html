@@ -39,7 +39,7 @@
             border-radius: 16px;
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.05);
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             border: 1px solid #222;
         }
 
@@ -99,10 +99,10 @@
 
         .image-clue { font-size: 110px; margin: 15px 0; text-shadow: 0 10px 20px rgba(0,0,0,0.5); animation: popIn 0.5s ease; }
 
-        .word-display { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+        .word-display { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
         
         .static-letter {
-            font-size: 48px; font-weight: bold; text-transform: uppercase; color: #fff; width: 60px; height: 70px; display: flex; justify-content: center; align-items: center; background: var(--letter-bg); border-radius: 8px; border: 2px solid var(--letter-border); box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            font-size: 44px; font-weight: bold; text-transform: uppercase; color: #fff; width: 55px; height: 65px; display: flex; justify-content: center; align-items: center; background: var(--letter-bg); border-radius: 8px; border: 2px solid var(--letter-border); box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
         
         .spinner-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; }
@@ -110,10 +110,10 @@
         .spin-btn:hover { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
 
         .spinner-container {
-            width: 60px; height: 70px; overflow-y: scroll; scroll-snap-type: y mandatory; border: 3px solid var(--neon-cyan); border-radius: 8px; background: var(--letter-bg); position: relative; box-shadow: 0 0 20px var(--neon-cyan-dim), inset 0 0 15px rgba(0,0,0,0.8); scrollbar-width: none; -ms-overflow-style: none;
+            width: 55px; height: 65px; overflow-y: scroll; scroll-snap-type: y mandatory; border: 3px solid var(--neon-cyan); border-radius: 8px; background: var(--letter-bg); position: relative; box-shadow: 0 0 20px var(--neon-cyan-dim), inset 0 0 15px rgba(0,0,0,0.8); scrollbar-width: none; -ms-overflow-style: none;
         }
         .spinner-container::-webkit-scrollbar { display: none; }
-        .spinner-letter { height: 70px; display: flex; justify-content: center; align-items: center; font-size: 44px; font-weight: bold; color: var(--neon-cyan); scroll-snap-align: start; text-shadow: 0 0 5px var(--neon-cyan); }
+        .spinner-letter { height: 65px; display: flex; justify-content: center; align-items: center; font-size: 40px; font-weight: bold; color: var(--neon-cyan); scroll-snap-align: start; text-shadow: 0 0 5px var(--neon-cyan); }
 
         .tools-area { margin-top: 15px; display: flex; justify-content: center; gap: 15px; align-items: center; min-height: 40px; }
         
@@ -162,26 +162,19 @@
             <p class="lobby-subtitle">SELECT YOUR CHALLENGE</p>
             
             <button class="level-btn" onclick="openSetMenu(3)">
-                <span class="btn-icon">🥉</span>
-                3-Letter Words
-                <span class="btn-icon" style="opacity: 0;">🥉</span> 
+                <span class="btn-icon">🥉</span> 3-Letter Words <span class="btn-icon" style="opacity: 0;">🥉</span> 
             </button>
-            
             <button class="level-btn" onclick="openSetMenu(4)">
-                <span class="btn-icon">🥈</span>
-                4-Letter Words
-                <span class="btn-icon" style="opacity: 0;">🥈</span>
+                <span class="btn-icon">🥈</span> 4-Letter Words <span class="btn-icon" style="opacity: 0;">🥈</span>
             </button>
             <button class="level-btn" onclick="openSetMenu(5)">
-                <span class="btn-icon">🥇</span>
-                5-Letter Words
-                <span class="btn-icon" style="opacity: 0;">🥇</span>
+                <span class="btn-icon">🥇</span> 5-Letter Words <span class="btn-icon" style="opacity: 0;">🥇</span>
             </button>
-            
-            <button class="level-btn" disabled>
-                <span class="btn-icon" style="filter: grayscale(1);">🏆</span>
-                6-Letter Words
-                <span class="btn-icon">🔒</span>
+            <button class="level-btn" onclick="openSetMenu(6)">
+                <span class="btn-icon">💎</span> 6-Letter Words <span class="btn-icon" style="opacity: 0;">💎</span>
+            </button>
+            <button class="level-btn" onclick="openSetMenu(7)">
+                <span class="btn-icon">👑</span> 7-Letter Words <span class="btn-icon" style="opacity: 0;">👑</span>
             </button>
         </div>
 
@@ -189,8 +182,7 @@
             <h1 class="lobby-title neon-title" id="setMenuTitle">SETS</h1>
             <p class="lobby-subtitle">CHOOSE YOUR FAMILY</p>
             
-            <div id="setButtonsGrid" class="set-grid">
-                </div>
+            <div id="setButtonsGrid" class="set-grid"></div>
 
             <button class="back-btn" onclick="returnToMainLobby()">⬅ Return to Main Menu</button>
         </div>
@@ -210,8 +202,7 @@
 
             <div id="imageClue" class="image-clue">🔤</div>
 
-            <div id="wordDisplay" class="word-display">
-                </div>
+            <div id="wordDisplay" class="word-display"></div>
 
             <div class="tools-area">
                 <button id="listenBtn" class="tool-btn listen-btn" onclick="speakWord()">🔊 LISTEN</button>
@@ -293,7 +284,7 @@
             if (targetIndex !== -1) {
                 const spinner = document.getElementById('letterSpinner');
                 const absoluteIndex = middleSetStartIndex + targetIndex;
-                spinner.scrollTo({ top: absoluteIndex * 70, behavior: 'smooth' });
+                spinner.scrollTo({ top: absoluteIndex * 65, behavior: 'smooth' });
                 
                 const feedback = document.getElementById('feedbackMessage');
                 feedback.textContent = "";
@@ -358,19 +349,19 @@
         }
 
         function loadPhase() {
-            // Updated to handle up to 6 letters
-            while(currentPhaseIndex <= 5) {
+            while(currentPhaseIndex <= 6) { // Expanded to 7 letters
                 if (currentFamily.changes[currentPhaseIndex] && currentFamily.changes[currentPhaseIndex].length > 0) {
                     currentPhaseWords = [...currentFamily.changes[currentPhaseIndex]].sort(() => Math.random() - 0.5);
                     currentWordIndex = 0;
 
                     const phaseTexts = [
-                        "Change the 1st letter!", 
-                        "Change the 2nd letter!", 
+                        "Change the 1st letter!",
+                        "Change the 2nd letter!",
                         "Change the 3rd letter!",
                         "Change the 4th letter!",
                         "Change the 5th letter!",
-                        "Change the 6th letter!"
+                        "Change the 6th letter!",
+                        "Change the 7th letter!"
                     ];
                     document.getElementById('phaseInstruction').textContent = phaseTexts[currentPhaseIndex];
                     document.getElementById('phaseInstruction').style.display = 'block';
@@ -482,14 +473,14 @@
             
             const spinner = document.getElementById('letterSpinner');
             isTeleporting = true;
-            spinner.scrollTo({ top: (middleSetStartIndex + 1) * 70 }); 
+            spinner.scrollTo({ top: (middleSetStartIndex + 1) * 65 }); 
             setTimeout(() => { isTeleporting = false; }, 50);
         }
 
         function spinByButton(direction) {
             if (isProcessing || isLevelLocked) return;
             const spinner = document.getElementById('letterSpinner');
-            spinner.scrollBy({ top: direction * 70, behavior: 'smooth' });
+            spinner.scrollBy({ top: direction * 65, behavior: 'smooth' });
         }
 
         function handleSpin() {
@@ -508,7 +499,7 @@
 
         function recenterSpinner() {
             const spinner = document.getElementById('letterSpinner');
-            const letterHeight = 70;
+            const letterHeight = 65;
             let selectedIndex = Math.round(spinner.scrollTop / letterHeight);
             
             if (selectedIndex < alphabetLength || selectedIndex > (totalSets - 1) * alphabetLength) {
@@ -534,7 +525,7 @@
             const feedback = document.getElementById('feedbackMessage');
             const level = currentPhaseWords[currentWordIndex];
 
-            const letterHeight = 70;
+            const letterHeight = 65;
             let selectedIndex = Math.round(spinner.scrollTop / letterHeight);
             
             const normalizedIndex = ((selectedIndex % alphabetLength) + alphabetLength) % alphabetLength;
@@ -581,7 +572,7 @@
                     const targetIndex = alphabet.indexOf(level.answer);
                     if (targetIndex !== -1) {
                         const absoluteIndex = middleSetStartIndex + targetIndex;
-                        spinner.scrollTo({ top: absoluteIndex * 70, behavior: 'smooth' });
+                        spinner.scrollTo({ top: absoluteIndex * 65, behavior: 'smooth' });
                     }
 
                     document.getElementById('nextWordBtn').style.display = 'inline-block';
